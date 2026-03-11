@@ -37,7 +37,7 @@ model Organization {
   name              String                
   slug              String                @unique
   timezone          String
-  logoUrl           String
+  logoUrl           String?
 
   ownerId           String
   owner             User                  @relation(fields: [ownerId], references: [id])
@@ -62,6 +62,7 @@ model Service{
   price             Int
   currency          String
   locationAddress   String?
+  isActive           Boolean              @default(true)
 
   Organization      Organization          @relation(fields: [organizationId], references: [id])
 
