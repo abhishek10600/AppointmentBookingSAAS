@@ -1,6 +1,6 @@
 import { prisma } from "../../lib/prisma.js";
 import { ApiError } from "../../utils/ApiError.js";
-import { createServiceData } from "./service.schema.js";
+import { createServiceData, updateServiceData } from "./service.schema.js";
 
 export const createService = async (
   data: createServiceData,
@@ -38,4 +38,124 @@ export const createService = async (
   });
 
   return service;
+};
+
+export const getOrganizationServices = async (
+  organizationId: string,
+  userId: string
+) => {
+  const organization = await prisma.organization.findFirst({
+    where: {
+      id: organizationId,
+      ownerId: userId,
+    },
+  });
+
+  if (!organization) {
+    throw new ApiError(403, "Access Denied");
+  }
+
+  const services = await prisma.service.findMany({
+    where: {
+      organizationId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return services;
+};
+
+export const getActiveServices = async (
+  organizationId: string,
+  userId: string
+) => {
+  const organization = await prisma.organization.findFirst({
+    where: {
+      id: organizationId,
+      ownerId: userId,
+    },
+  });
+
+  if (!organization) {
+    throw new ApiError(403, "Access Denied");
+  }
+
+  const activeServices = await prisma.service.findMany({
+    where: {
+      organizationId,
+      isActive: true,
+    },
+  });
+
+  return activeServices;
+};
+
+export const getServiceById = async (serviceId: string, userId: string) => {
+  const service = await prisma.service.findFirst({
+    where: {
+      id: serviceId,
+      Organization: {
+        ownerId: userId,
+      },
+    },
+  });
+
+  if (!service) {
+    throw new ApiError(404, "Service not found");
+  }
+
+  return service;
+};
+
+export const updateService = async (
+  serviceId: string,
+  data: updateServiceData,
+  userId: string
+) => {
+  const service = await prisma.service.findFirst({
+    where: {
+      id: serviceId,
+      Organization: {
+        ownerId: userId,
+      },
+    },
+  });
+
+  if (!service) {
+    throw new ApiError(404, "Service not found");
+  }
+
+  const updatedService = await prisma.service.update({
+    where: {
+      id: service.id,
+    },
+    data,
+  });
+
+  return updatedService;
+};
+
+export const deleteService = async (serviceId: string, userId: string) => {
+  const service = await prisma.service.findFirst({
+    where: {
+      id: serviceId,
+      Organization: {
+        ownerId: userId,
+      },
+    },
+  });
+
+  if (!service) {
+    throw new ApiError(403, "Service not found.");
+  }
+
+  await prisma.service.delete({
+    where: {
+      id: serviceId,
+    },
+  });
+
+  return { message: "Service deleted successfully." };
 };
