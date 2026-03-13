@@ -30,10 +30,12 @@ app.get("/health-check", (req: Request, res: Response) => {
 import authRouter from "./modules/auth/auth.route.js";
 import orgRouter from "./modules/organization/organization.route.js";
 import serviceRouter from "./modules/service/service.route.js";
+import availabilityRuleRouter from "./modules/availability/availability.route.js";
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/organization", orgRouter);
 app.use("/api/v1/service", serviceRouter);
+app.use("/api/v1/availability", availabilityRuleRouter);
 
 app.use(errorHandler);
 
