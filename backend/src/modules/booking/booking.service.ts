@@ -1,5 +1,9 @@
 import { prisma } from "../../lib/prisma.js";
 import { ApiError } from "../../utils/ApiError.js";
+import {
+  queueBookingCancelEmail,
+  queueBookingConfirmationEmail,
+} from "../email/email.service.js";
 import { createBookingData } from "./booking.schema.js";
 
 export const createBooking = async (data: createBookingData) => {
@@ -88,6 +92,8 @@ export const createBooking = async (data: createBookingData) => {
       },
     });
 
+    await queueBookingConfirmationEmail(booking.id);
+
     return booking;
   });
 
@@ -127,6 +133,8 @@ export const cancelBooking = async (bookingId: string) => {
       status: "CANCELLED",
     },
   });
+
+  await queueBookingCancelEmail(bookingId);
 
   return cancelledBooking;
 };
