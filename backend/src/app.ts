@@ -33,6 +33,8 @@ import serviceRouter from "./modules/service/service.route.js";
 import availabilityRuleRouter from "./modules/availability/availability.route.js";
 import slotRouter from "./modules/slot/slot.route.js";
 import bookingRouter from "./modules/booking/booking.route.js";
+import googleRouter from "./modules/google/google.route.js";
+import { googleCallback } from "./modules/google/google.controller.js";
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/organization", orgRouter);
@@ -40,6 +42,8 @@ app.use("/api/v1/service", serviceRouter);
 app.use("/api/v1/availability", availabilityRuleRouter);
 app.use("/api/v1/slot", slotRouter);
 app.use("/api/v1/booking", bookingRouter);
+app.use("/api/v1/google", googleRouter);
+app.use("/auth/google/callback", googleCallback);
 
 app.use(errorHandler);
 
