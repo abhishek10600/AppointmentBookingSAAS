@@ -1,9 +1,27 @@
 export const bookingConfirmationTemplate = (
   customerName: string,
   serviceTitle: string,
-  startTime: Date
+  startTime: Date,
+  meetingLink: string | null
 ) => {
-  return `<div style="font-family:Arial;padding:20px">
+  if (meetingLink) {
+    return `<div style="font-family:Arial;padding:20px">
+    <h2>Booking Confirmed</h2>
+
+    <p>Hello <b>${customerName}</b>,</p>
+
+    <p>Your booking for <b>${serviceTitle}</b> is confirmed.</p>
+
+    <p>
+      Date: ${startTime.toDateString()} <br/>
+      Time: ${startTime.toLocaleTimeString()}
+      Meeting Link: <a href="${meetingLink}">${meetingLink}</a>
+    </p>
+
+    <p>See you soon.</p>
+  </div>`;
+  } else {
+    return `<div style="font-family:Arial;padding:20px">
     <h2>Booking Confirmed</h2>
 
     <p>Hello <b>${customerName}</b>,</p>
@@ -17,6 +35,7 @@ export const bookingConfirmationTemplate = (
 
     <p>See you soon.</p>
   </div>`;
+  }
 };
 
 export const bookingReminderTemplate = (

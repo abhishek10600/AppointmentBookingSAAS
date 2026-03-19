@@ -36,7 +36,8 @@ new Worker(
           html: bookingConfirmationTemplate(
             booking.customerName,
             booking.service.title,
-            booking.startTime
+            booking.startTime,
+            booking.meetingLink
           ),
         });
       }

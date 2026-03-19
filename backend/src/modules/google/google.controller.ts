@@ -5,13 +5,13 @@ import { google } from "googleapis";
 import { prisma } from "../../lib/prisma.js";
 
 export const googleAuth = catchAsync(async (req: Request, res: Response) => {
-  //   const organizationId = req.body.organizationId as string;
+  // const organizationId = req.body.organizationId as string;
   const url = oauth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES,
     prompt: "consent",
     // state: req.user?.organizationId,
-    state: "2356284c-39d4-474d-9588-ce77ab2ac0d0",
+    state: "eface8e7-f4e4-4076-be1d-56941cd6cade",
     // state: organizationId,
   });
 
