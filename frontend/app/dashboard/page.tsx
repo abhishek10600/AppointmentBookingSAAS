@@ -15,7 +15,7 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <h1>Welcome {user.name}</h1>
+      <h1>Welcome {user.name} wassup?</h1>
       <button onClick={() => dispatch(logout())}>Logout</button>
     </div>
   );
