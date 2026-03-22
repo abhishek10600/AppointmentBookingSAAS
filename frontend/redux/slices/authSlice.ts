@@ -41,16 +41,6 @@ export const loginUserThunk = createAsyncThunk<
   }
 });
 
-// Register
-// export const registerUserThunk = createAsyncThunk(
-//   "auth/register",
-//   async (data: { name: string; email: string; password: string }) => {
-//     const res = await authApi.register(data);
-//     tokenService.setToken(res.token);
-//     return res.user;
-//   },
-// );
-
 export const registerUserThunk = createAsyncThunk<
   any,
   RegisterUserFormData,
