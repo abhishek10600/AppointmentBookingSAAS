@@ -1,22 +1,27 @@
 "use client";
 
-import { useAuthInit } from "@/hooks/userAuthInit";
-import { useAppSelector, useAppDispatch } from "@/redux/hooks";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { Button } from "@/components/ui/button";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { logout } from "@/redux/slices/authSlice";
 
 export default function DashboardPage() {
-  useAuthInit();
+  return (
+    <ProtectedRoute>
+      <DashboardContent />
+    </ProtectedRoute>
+  );
+}
 
+function DashboardContent() {
   const { user, isLoading } = useAppSelector((s) => s.auth);
   const dispatch = useAppDispatch();
-
-  if (isLoading) return <p>Loading...</p>;
-  if (!user) return <p>Unauthorized</p>;
-
   return (
     <div>
-      <h1>Welcome {user.name} wassup?</h1>
-      <button onClick={() => dispatch(logout())}>Logout</button>
+      <h1>Welcome {user?.name}</h1>
+      <Button className="cursor-pointer" onClick={() => dispatch(logout())}>
+        Logout
+      </Button>
     </div>
   );
 }

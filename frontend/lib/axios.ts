@@ -18,10 +18,11 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (error) => {
+    // Just clear token
     if (error.response?.status === 401) {
       tokenService.clearToken();
-      window.location.href = "/auth/login";
     }
+
     return Promise.reject(error);
   },
 );
