@@ -4,3 +4,10 @@ export interface IUser {
   email: string;
   role: string;
 }
+
+export interface IOrganization {
+  id: string;
+  name: string;
+  slug: string;
+  timezone: string;
+}
