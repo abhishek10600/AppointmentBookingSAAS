@@ -11,3 +11,15 @@ export interface IOrganization {
   slug: string;
   timezone: string;
 }
+
+export interface IService {
+  id: string;
+  title: string;
+  description: string;
+  serviceType: "ONLINE" | "OFFLINE";
+  durationInMinutes: number;
+  price: number;
+  currency: string;
+  locationAddress?: string;
+  isActive: boolean;
+}
