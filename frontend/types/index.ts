@@ -23,3 +23,11 @@ export interface IService {
   locationAddress?: string;
   isActive: boolean;
 }
+
+export interface IAvailability {
+  id: string;
+  organizationId: string;
+  dayofWeek: number;
+  startTime: string;
+  endTime: string;
+}
