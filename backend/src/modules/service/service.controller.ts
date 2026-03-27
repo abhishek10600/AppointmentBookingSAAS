@@ -6,6 +6,7 @@ import {
   deleteService,
   getActiveServices,
   getOrganizationServices,
+  getPublicServicesByOrgId,
   getServiceById,
   updateService,
 } from "./service.service.js";
@@ -92,6 +93,19 @@ export const deleteServiceController = catchAsync(
     return res.status(200).json({
       success: true,
       data: result,
+    });
+  }
+);
+
+export const getPublicServicesController = catchAsync(
+  async (req: Request, res: Response) => {
+    const organizationId = req.params.organizationId as string;
+
+    const services = await getPublicServicesByOrgId(organizationId);
+
+    return res.status(200).json({
+      success: true,
+      data: services,
     });
   }
 );

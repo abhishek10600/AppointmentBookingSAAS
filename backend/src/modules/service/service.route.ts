@@ -5,6 +5,7 @@ import {
   deleteServiceController,
   getOrganizationActiveServicesController,
   getOrganizationServiceController,
+  getPublicServicesController,
   getServiceController,
   updateServiceController,
 } from "./service.controller.js";
@@ -21,5 +22,7 @@ router
 router.route("/:serviceId").get(authMiddleware, getServiceController);
 router.route("/:serviceId").patch(authMiddleware, updateServiceController);
 router.route("/:serviceId").delete(authMiddleware, deleteServiceController);
+
+router.route("/public/:organizationId").get(getPublicServicesController);
 
 export default router;

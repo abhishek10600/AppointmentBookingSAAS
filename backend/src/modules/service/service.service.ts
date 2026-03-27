@@ -159,3 +159,15 @@ export const deleteService = async (serviceId: string, userId: string) => {
 
   return { message: "Service deleted successfully." };
 };
+
+export const getPublicServicesByOrgId = async (organizationId: string) => {
+  return await prisma.service.findMany({
+    where: {
+      organizationId,
+      isActive: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+};

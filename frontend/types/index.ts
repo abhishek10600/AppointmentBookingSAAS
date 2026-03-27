@@ -31,3 +31,23 @@ export interface IAvailability {
   startTime: string;
   endTime: string;
 }
+
+export interface IBooking {
+  id: string;
+  organizationId: string;
+  serviceId: string;
+
+  customerName: string;
+  customerEmail: string;
+  customerPhone?: string;
+
+  startTime: string;
+  endTime: string;
+
+  status: "PENDING" | "CONFIRMED" | "CANCELLED";
+
+  service?: {
+    id: string;
+    title: string;
+  };
+}
