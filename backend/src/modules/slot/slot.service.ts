@@ -65,9 +65,18 @@ export const getAvailableSlots = async (serviceId: string, date: string) => {
     },
   });
 
-  const bookedTimes = bookings.map((b) =>
-    b.startTime.toISOString().slice(11, 16)
-  );
+  // const bookedTimes = bookings.map((b) =>
+  //   b.startTime.toISOString().slice(11, 16)
+  // );
+
+  const bookedTimes = bookings.map((b) => {
+    const local = new Date(b.startTime);
+
+    const hours = String(local.getHours()).padStart(2, "0");
+    const minutes = String(local.getMinutes()).padStart(2, "0");
+
+    return `${hours}:${minutes}`;
+  });
 
   const locks = await prisma.bookingLock.findMany({
     where: {
@@ -82,7 +91,16 @@ export const getAvailableSlots = async (serviceId: string, date: string) => {
     },
   });
 
-  const lockedTimes = locks.map((l) => l.startTime.toISOString().slice(11, 16));
+  // const lockedTimes = locks.map((l) => l.startTime.toISOString().slice(11, 16));
+
+  const lockedTimes = locks.map((l) => {
+    const local = new Date(l.startTime);
+
+    const hours = String(local.getHours()).padStart(2, "0");
+    const minutes = String(local.getMinutes()).padStart(2, "0");
+
+    return `${hours}:${minutes}`;
+  });
 
   const unavailableTimes = [...bookedTimes, ...lockedTimes];
 

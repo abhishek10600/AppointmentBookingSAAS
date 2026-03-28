@@ -31,13 +31,13 @@ const AvailabilityPage = () => {
   }
 
   const days = [
-    "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
     "Saturday",
+    "Sunday",
   ];
 
   const formatTime = (time: string) => {

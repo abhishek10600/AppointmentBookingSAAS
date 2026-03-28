@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
-export default function BookingForm({ service, date, slot }: any) {
+export default function BookingForm({ service, date, slot, onSuccess }: any) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,7 +27,6 @@ export default function BookingForm({ service, date, slot }: any) {
     try {
       setLoading(true);
 
-      // ⚠️ FIX: safer date handling
       const startTime = new Date(
         `${date.toISOString().split("T")[0]}T${slot}:00`,
       ).toISOString();
@@ -44,8 +43,15 @@ export default function BookingForm({ service, date, slot }: any) {
 
       setName("");
       setEmail("");
-    } catch (err) {
-      toast.error("Booking failed");
+
+      onSuccess?.();
+    } catch (err: any) {
+      if (err?.response?.data?.message === "Time slot already booked") {
+        toast.error("This slot was just taken. Pick another.");
+        onSuccess?.();
+      } else {
+        toast.error("Booking failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -61,24 +67,22 @@ export default function BookingForm({ service, date, slot }: any) {
       </div>
 
       <div className="space-y-3">
-        <div className="space-y-1">
+        <div>
           <Label>Name</Label>
           <Input
             placeholder="John Doe"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="h-10"
           />
         </div>
 
-        <div className="space-y-1">
+        <div>
           <Label>Email</Label>
           <Input
-            placeholder="john@example.com"
             type="email"
+            placeholder="john@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="h-10"
           />
         </div>
       </div>
@@ -86,9 +90,9 @@ export default function BookingForm({ service, date, slot }: any) {
       <Button
         onClick={handleSubmit}
         disabled={loading}
-        className="w-full h-11 text-base font-semibold"
+        className="w-full text-base font-semibold cursor-pointer py-5"
       >
-        {loading ? "Booking..." : "Confirm Booking"}
+        {loading ? "Confirming..." : "Confirm Booking"}
       </Button>
     </div>
   );

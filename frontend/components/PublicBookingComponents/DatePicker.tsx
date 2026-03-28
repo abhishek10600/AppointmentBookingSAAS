@@ -7,7 +7,7 @@ export default function DatePicker({ value, onChange }: any) {
     <div className="space-y-3">
       <p className="text-sm font-semibold">Select a Date</p>
 
-      <div className="rounded-2xl border p-3 shadow-sm">
+      <div className="rounded-2xl border p-3 shadow-sm bg-white">
         <Calendar
           mode="single"
           selected={value}
