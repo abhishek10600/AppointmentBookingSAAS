@@ -50,7 +50,6 @@ const Page = () => {
       formattedDate,
     );
 
-    // ✅ Prevent unnecessary UI updates
     setSlots((prev) => {
       const isSame =
         prev.length === freshSlots.length &&
@@ -68,7 +67,6 @@ const Page = () => {
     setIsInitialLoad(false);
   };
 
-  // Initial fetch
   useEffect(() => {
     if (!selectedService || !date) return;
 
@@ -76,7 +74,6 @@ const Page = () => {
     fetchSlots(selectedService, date);
   }, [selectedService, date]);
 
-  // Auto refresh (silent)
   useEffect(() => {
     if (!selectedService || !date) return;
 

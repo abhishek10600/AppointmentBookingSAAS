@@ -7,7 +7,6 @@ export default function SlotPicker({
   onSelect,
   loading,
 }: any) {
-  // ✅ Only show skeleton if FIRST load
   if (loading && !slots.length) {
     return (
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
