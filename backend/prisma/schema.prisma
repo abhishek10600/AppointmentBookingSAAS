@@ -138,7 +138,7 @@ model Payment{
   status            PaymentStatus
 
   provider          String
-  providerPaymentId String?
+  providerPaymentId String?                   @unique
 
   booking            Booking                  @relation(fields: [bookingId], references: [id])
   organization       Organization             @relation(fields: [organizationId], references: [id])

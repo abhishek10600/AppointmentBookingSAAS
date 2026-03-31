@@ -107,6 +107,5 @@ export const getAvailableSlots = async (serviceId: string, date: string) => {
   const availableSlots = generatedSlots.filter(
     (slot) => !unavailableTimes.includes(slot)
   );
-
   return availableSlots;
 };

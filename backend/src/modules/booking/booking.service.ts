@@ -7,8 +7,10 @@ import {
 import { queueCreateMeeting } from "../meeting/meeting.service.js";
 import { createBookingData } from "./booking.schema.js";
 
-export const createBooking = async (data: createBookingData) => {
-  const service = await prisma.service.findUnique({
+export const createBooking = async (data: createBookingData, tx: any) => {
+  const db = tx || prisma;
+
+  const service = await db.service.findUnique({
     where: {
       id: data.serviceId,
     },
@@ -27,80 +29,40 @@ export const createBooking = async (data: createBookingData) => {
     startTime.getTime() + service.durationInMinutes * 60000
   );
 
-  //   implementing transaction
-  const booking = await prisma.$transaction(async (tx) => {
-    // check overlapping booking
-    const overlappingBooking = await tx.booking.findFirst({
-      where: {
-        serviceId: data.serviceId,
-        status: {
-          not: "CANCELLED",
-        },
-        AND: [
-          {
-            startTime: {
-              lt: endTime,
-            },
-          },
-          {
-            endTime: {
-              gt: startTime,
-            },
-          },
-        ],
+  const overlappingBooking = await db.booking.findFirst({
+    where: {
+      serviceId: data.serviceId,
+      status: {
+        not: "CANCELLED",
       },
-    });
-
-    if (overlappingBooking) {
-      throw new ApiError(400, "Time slot already booked");
-    }
-
-    // check existing booking lock
-    const existingLock = await tx.bookingLock.findFirst({
-      where: {
-        serviceId: data.serviceId,
-        expiresAt: {
-          gt: new Date(),
-        },
-        AND: [
-          {
-            startTime: {
-              lt: endTime,
-            },
-          },
-          {
-            endTime: {
-              gt: startTime,
-            },
-          },
-        ],
-      },
-    });
-
-    if (existingLock) {
-      throw new ApiError(400, "Slot is temporarily locked");
-    }
-
-    const booking = await tx.booking.create({
-      data: {
-        organizationId: data.organizationId,
-        serviceId: data.serviceId,
-        customerName: data.customerName,
-        customerEmail: data.customerEmail,
-        customerPhone: data.customerPhone,
-        startTime,
-        endTime,
-      },
-    });
-
-    if (service.serviceType === "ONLINE") {
-      await queueCreateMeeting(booking.id);
-    } else {
-      await queueBookingConfirmationEmail(booking.id);
-    }
-
-    return booking;
+      AND: [{ startTime: { lt: endTime } }, { endTime: { gt: startTime } }],
+    },
   });
+
+  if (overlappingBooking) {
+    throw new ApiError(400, "Time slot already booked");
+  }
+
+  const booking = await db.booking.create({
+    data: {
+      organizationId: data.organizationId,
+      serviceId: data.serviceId,
+      customerName: data.customerName,
+      customerEmail: data.customerEmail,
+      customerPhone: data.customerPhone,
+      startTime,
+      endTime,
+    },
+    include: {
+      service: true,
+    },
+  });
+
+  if (service.serviceType === "ONLINE") {
+    await queueCreateMeeting(booking.id);
+  } else {
+    await queueBookingConfirmationEmail(booking.id);
+  }
 
   return booking;
 };
