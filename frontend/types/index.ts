@@ -10,6 +10,8 @@ export interface IOrganization {
   name: string;
   slug: string;
   timezone: string;
+  plan: "FREE" | "PRO";
+  subscriptionStatus: "ACTIVE" | "INACTIVE" | "CANCELLED";
 }
 
 export interface IService {

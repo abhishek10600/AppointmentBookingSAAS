@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync.js";
-import { createOrderService, verifyPaymentService } from "./payment.service.js";
+import {
+  createOrderService,
+  createSubscriptionService,
+  verifyPaymentService,
+} from "./payment.service.js";
 
 export const createOrderController = catchAsync(
   async (req: Request, res: Response) => {
@@ -22,6 +26,17 @@ export const verifyPaymentController = catchAsync(
     return res.status(200).json({
       success: true,
       data: result,
+    });
+  }
+);
+
+export const createSubscriptionController = catchAsync(
+  async (req: Request, res: Response) => {
+    const { organizationId } = req.body;
+    const subscription = await createSubscriptionService(organizationId);
+    return res.status(201).json({
+      success: true,
+      data: subscription,
     });
   }
 );

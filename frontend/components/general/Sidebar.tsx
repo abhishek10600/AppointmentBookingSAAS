@@ -14,6 +14,7 @@ import {
   Plug,
   ChevronLeft,
   ChevronRight,
+  ReceiptText,
 } from "lucide-react";
 
 const menuItems = [
@@ -27,6 +28,7 @@ const menuItems = [
   { name: "Availability", path: "/dashboard/availability", icon: Calendar },
   { name: "Bookings", path: "/dashboard/bookings", icon: BookOpen },
   { name: "Integrations", path: "/dashboard/integrations", icon: Plug },
+  { name: "Billing", path: "/dashboard/billing", icon: ReceiptText },
 ];
 
 const Sidebar = () => {

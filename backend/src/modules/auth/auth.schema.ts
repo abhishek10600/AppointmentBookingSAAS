@@ -14,6 +14,3 @@ export const loginUserSchema = z
     password: z.string().min(1, "Password cannot be empty"),
   })
   .strict();
-
-
-

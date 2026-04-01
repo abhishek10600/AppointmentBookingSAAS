@@ -12,6 +12,9 @@ export const createOrderService = async (
     where: {
       id: serviceId,
     },
+    include: {
+      Organization: true,
+    },
   });
 
   if (!service) {
@@ -53,13 +56,29 @@ export const createOrderService = async (
     },
   });
 
+  const price = service.price;
+  let platFormFee = 0;
+
+  if (service.Organization.plan === "FREE") {
+    platFormFee = Math.round(price * 0.08);
+  }
+
+  const totalAmount = price + platFormFee;
+
   const order = await razorpay.orders.create({
-    amount: service.price * 100,
+    amount: totalAmount * 100,
     currency: service.currency,
     receipt: `receipt_${Date.now()}`,
   });
 
-  return order;
+  const orderResult = {
+    order,
+    price,
+    platFormFee,
+    totalAmount,
+  };
+
+  return orderResult;
 };
 
 export const verifyPaymentService = async (data: any) => {
@@ -82,7 +101,7 @@ export const verifyPaymentService = async (data: any) => {
     throw new ApiError(400, "Invalid payment signature");
   }
 
-  console.log("we are here");
+  // console.log("we are here");
 
   const result = await prisma.$transaction(async (tx) => {
     const booking = await createBooking(bookingData, tx);
@@ -110,4 +129,26 @@ export const verifyPaymentService = async (data: any) => {
   });
 
   return result;
+};
+
+export const createSubscriptionService = async (organizationId: string) => {
+  const subscription = await razorpay.subscriptions.create({
+    plan_id: process.env.RAZORPAY_PLAN_ID!,
+    customer_notify: 1,
+    total_count: 12,
+  });
+
+  console.log({ subscription });
+
+  await prisma.organization.update({
+    where: {
+      id: organizationId,
+    },
+    data: {
+      subscriptionId: subscription.id,
+      subscriptionStatus: "INACTIVE",
+    },
+  });
+
+  return subscription;
 };

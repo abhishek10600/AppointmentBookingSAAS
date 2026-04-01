@@ -33,11 +33,16 @@ enum UserRole{
 
 
 model Organization {
-  id                String                @id @default(uuid())
-  name              String                
-  slug              String                @unique
-  timezone          String
-  logoUrl           String?
+  id                  String                @id @default(uuid())
+  name                String                
+  slug                String                @unique
+  timezone            String
+  logoUrl             String?
+
+  plan                Plan                  @default(FREE)
+  subscriptionStatus  SubscriptionStatus    @default(INACTIVE)
+  subscriptionId      String?               @unique
+  currentPeriodEnd    DateTime?
 
   ownerId           String
   owner             User                  @relation(fields: [ownerId], references: [id])
@@ -49,6 +54,17 @@ model Organization {
   payments          Payment[]
 
   createdAt         DateTime              @default(now())
+}
+
+enum Plan{
+  FREE
+  PRO
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  CANCELLED
 }
 
 
