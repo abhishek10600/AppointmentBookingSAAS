@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { billingApi } from "@/lib/api/billing";
 import { useAppSelector } from "@/redux/hooks";
@@ -41,13 +42,34 @@ const BillingPage = () => {
       <h1 className="text-xl font-bold">Billing</h1>
 
       <div className="mt-4">
-        <p>Current Plan: {org?.plan}</p>
-        <p>Status: {org?.subscriptionStatus}</p>
+        <p>
+          Current Plan: <span className="font-bold">{org?.plan}</span>
+        </p>
+        {org?.subscriptionStatus === "ACTIVE" && (
+          <p>
+            Status:{" "}
+            <Badge className="bg-green-500">{org?.subscriptionStatus}</Badge>
+          </p>
+        )}
+
+        {org?.subscriptionStatus === "INACTIVE" && (
+          <p>
+            Status:{" "}
+            <Badge className="bg-orange-500">{org?.subscriptionStatus}</Badge>
+          </p>
+        )}
+
+        {org?.subscriptionStatus === "CANCELLED" && (
+          <p>
+            Status:{" "}
+            <Badge className="bg-red-500">{org?.subscriptionStatus}</Badge>
+          </p>
+        )}
 
         {org?.plan === "FREE" && (
           <Button
             onClick={handleUpgrade}
-            className="cursor-pointer hover:scale-110"
+            className="cursor-pointer hover:scale-110 my-4"
           >
             Upgrade to Pro (₹699/month)
           </Button>

@@ -20,6 +20,8 @@ model User{
   role              UserRole              @default(OWNER)
 
   organizations     Organization[]
+  bankDetail        BankDetail?
+  wallet            Wallet?
 
   createdAt         DateTime              @default(now())
   updatedAt         DateTime              @updatedAt
@@ -30,7 +32,6 @@ enum UserRole{
   ADMIN
   STAFF
 }
-
 
 model Organization {
   id                  String                @id @default(uuid())
@@ -193,4 +194,49 @@ model BookingLock{
   endTime           DateTime
 
   expiresAt         DateTime
+}
+
+model BankDetail{
+  id                String                  @id @default(uuid())
+  userId            String                  @unique
+
+  accountHolderName String                  
+
+  accountNumberEnc  String
+  accountNumberIv   String
+  accountNumberTag  String
+
+  ifscCode          String
+  bankName          String
+  bankBranch        String
+
+  fundAccountId     String?
+  contactId         String?
+
+  isVerified        Boolean                   @default(false)
+
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+
+  user              User                     @relation(fields: [userId], references: [id])
+}
+
+
+model Wallet{
+  id                String                    @id @default(uuid())
+  userId            String                    @unique
+  balance           Int                       @default(0)
+
+  user              User                      @relation(fields: [userId], references: [id])
+}
+
+
+model Payout{
+  id                String                     @id @default(uuid())
+  userId            String
+  amount            Int
+  status            String
+  providerPayoutId  String?
+
+  createdAt         DateTime                    @default(now())
 }

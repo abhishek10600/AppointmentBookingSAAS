@@ -15,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ReceiptText,
+  Landmark,
 } from "lucide-react";
 
 const menuItems = [
@@ -28,6 +29,7 @@ const menuItems = [
   { name: "Availability", path: "/dashboard/availability", icon: Calendar },
   { name: "Bookings", path: "/dashboard/bookings", icon: BookOpen },
   { name: "Integrations", path: "/dashboard/integrations", icon: Plug },
+  { name: "Payments", path: "/dashboard/payments", icon: Landmark },
   { name: "Billing", path: "/dashboard/billing", icon: ReceiptText },
 ];
 

@@ -56,7 +56,7 @@ const IntegrationPage = () => {
 
   return (
     <div className="space-y-8">
-      <h2 className="text-3xl tracking-tight font-bold">Intgrations</h2>
+      <h2 className="text-3xl tracking-tight font-bold">Integrations</h2>
 
       <div className="border rounded-xl p-6 flex items-center justify-between">
         <div>
