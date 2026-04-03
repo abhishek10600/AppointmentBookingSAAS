@@ -1,6 +1,6 @@
 import crypto from "crypto";
 
-const ENECRYPTION_ALGORITH = "aes-256-gcm";
+const ENECRYPTION_ALGORITHM = "aes-256-gcm";
 const IV_LENGTH = 12;
 
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY!;
@@ -18,7 +18,7 @@ if (key.length !== 32) {
 export const encrypt = (text: string) => {
   const iv = crypto.randomBytes(IV_LENGTH);
 
-  const cipher = crypto.createCipheriv(ENECRYPTION_ALGORITH, key, iv);
+  const cipher = crypto.createCipheriv(ENECRYPTION_ALGORITHM, key, iv);
 
   const encrypted = Buffer.concat([
     cipher.update(text, "utf8"),
@@ -36,7 +36,7 @@ export const encrypt = (text: string) => {
 
 export const decrypt = (data: { content: string; iv: string; tag: string }) => {
   const decipher = crypto.createDecipheriv(
-    ENECRYPTION_ALGORITH,
+    ENECRYPTION_ALGORITHM,
     key,
     Buffer.from(data.iv, "hex")
   );

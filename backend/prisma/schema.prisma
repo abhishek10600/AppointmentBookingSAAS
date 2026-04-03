@@ -206,6 +206,8 @@ model BankDetail{
   accountNumberIv   String
   accountNumberTag  String
 
+  accountNumberLast4 String
+
   ifscCode          String
   bankName          String
   bankBranch        String

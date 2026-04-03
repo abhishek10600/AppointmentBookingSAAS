@@ -89,6 +89,16 @@ export const verifyPaymentService = async (data: any) => {
     bookingData,
   } = data;
 
+  const existingPayment = await prisma.payment.findUnique({
+    where: {
+      providerPaymentId: razorpay_payment_id,
+    },
+  });
+
+  if (existingPayment) {
+    return existingPayment;
+  }
+
   const generatedSignature = crypto
     .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
     .update(razorpay_order_id + "|" + razorpay_payment_id)

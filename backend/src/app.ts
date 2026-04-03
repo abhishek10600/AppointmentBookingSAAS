@@ -43,6 +43,7 @@ import googleRouter from "./modules/google/google.route.js";
 import { googleCallback } from "./modules/google/google.controller.js";
 import paymentRouter from "./modules/payment/payment.route.js";
 import { handleWebHook } from "./modules/payment/payment.webhook.js";
+import bankRouter from "./modules/bank/bank.route.js";
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/organization", orgRouter);
@@ -53,6 +54,7 @@ app.use("/api/v1/booking", bookingRouter);
 app.use("/api/v1/google", googleRouter);
 app.use("/auth/google/callback", googleCallback);
 app.use("/api/v1/payment", paymentRouter);
+app.use("/api/v1/bank", bankRouter);
 
 app.use(errorHandler);
 
