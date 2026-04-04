@@ -41,6 +41,7 @@ export const upsertBankDetailService = async (
       ifscCode: bankDetail.ifscCode,
       isVerified: bankDetail.isVerified,
       accountNumber: "XXXXXX" + bankDetail.accountNumberLast4,
+      accountNumberLast4: bankDetail.accountNumberLast4,
     };
   }
 
@@ -72,6 +73,7 @@ export const upsertBankDetailService = async (
     ifscCode: bankDetail.ifscCode,
     isVerified: bankDetail.isVerified,
     accountNumber: "XXXXXX" + bankDetail.accountNumberLast4,
+    accountNumberLast4: bankDetail.accountNumberLast4,
   };
 };
 
@@ -98,5 +100,6 @@ export const getUserBankDetailService = async (userId: string) => {
     ifscCode: bankDetail.ifscCode,
     isVerified: bankDetail.isVerified,
     accountNumber: "XXXXXX" + bankDetail.accountNumberLast4,
+    accountNumberLast4: bankDetail.accountNumberLast4,
   };
 };

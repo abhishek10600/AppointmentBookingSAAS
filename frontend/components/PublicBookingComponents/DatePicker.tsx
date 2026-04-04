@@ -17,7 +17,7 @@ export default function DatePicker({ value, onChange }: any) {
             today.setHours(0, 0, 0, 0);
             return date < today;
           }}
-          initialFocus
+          // initialFocus
         />
       </div>
     </div>

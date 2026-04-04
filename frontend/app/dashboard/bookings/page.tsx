@@ -106,7 +106,7 @@ const BookingsPage = () => {
               {booking.status !== "CANCELLED" && (
                 <Button
                   variant="destructive"
-                  className="w-full"
+                  className="w-full cursor-pointer"
                   onClick={async () => {
                     try {
                       await dispatch(cancelBookingThunk(booking.id)).unwrap();

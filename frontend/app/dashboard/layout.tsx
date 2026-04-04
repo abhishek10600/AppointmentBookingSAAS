@@ -1,9 +1,19 @@
+"use client";
+
 import Navbar from "@/components/general/Navbar";
 import Sidebar from "@/components/general/Sidebar";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import React from "react";
+import { useAppDispatch } from "@/redux/hooks";
+import { fetchOrganizations } from "@/redux/slices/organizationSlice";
+import React, { useEffect } from "react";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchOrganizations());
+  }, [dispatch]);
+
   return (
     <ProtectedRoute>
       <div className="h-screen flex flex-col">

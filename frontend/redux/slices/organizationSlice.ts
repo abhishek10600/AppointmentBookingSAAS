@@ -40,7 +40,12 @@ const orgSlice = createSlice({
       .addCase(fetchOrganizations.fulfilled, (state, action) => {
         state.organizations = action.payload;
 
-        if (!state.currentOrgId && action.payload.length > 0) {
+        const savedOrgId =
+          typeof window !== "undefined" ? localStorage.getItem("orgId") : null;
+
+        if (savedOrgId && action.payload.some((o) => o.id === savedOrgId)) {
+          state.currentOrgId = savedOrgId;
+        } else if (action.payload.length > 0) {
           state.currentOrgId = action.payload[0].id;
         }
       })

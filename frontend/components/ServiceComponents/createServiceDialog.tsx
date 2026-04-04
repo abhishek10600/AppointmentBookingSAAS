@@ -3,32 +3,39 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { createServiceThunk } from "@/redux/slices/serviceSlice";
-
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import {
   createServiceSchema,
   createServiceFormData,
 } from "@/lib/validators/service";
+import {
+  Plus,
+  Loader2,
+  IndianRupee,
+  Clock,
+  Laptop,
+  MapPin,
+} from "lucide-react";
+import { ServicePreview } from "./ServicePreview";
 
 export default function CreateServiceDialog() {
   const dispatch = useAppDispatch();
   const { currentOrgId } = useAppSelector((s) => s.org);
-
   const [open, setOpen] = useState(false);
 
   const {
@@ -36,6 +43,7 @@ export default function CreateServiceDialog() {
     handleSubmit,
     reset,
     watch,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<createServiceFormData>({
     resolver: zodResolver(createServiceSchema),
@@ -50,130 +58,156 @@ export default function CreateServiceDialog() {
     },
   });
 
-  const serviceType = watch("serviceType");
+  const formData = watch();
 
   const onSubmit = async (data: createServiceFormData) => {
-    if (!currentOrgId) {
-      toast.error("Please select an organization first");
-      return;
-    }
-
+    if (!currentOrgId) return toast.error("Select organization first");
     try {
       await dispatch(
-        createServiceThunk({
-          ...data,
-          organizationId: currentOrgId,
-        }),
+        createServiceThunk({ ...data, organizationId: currentOrgId }),
       ).unwrap();
-
-      toast.success("Service Created Successfully");
+      toast.success("Service created successfully!");
       reset();
       setOpen(false);
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Something went wrong";
-
-      toast.error(message);
-      console.error("CREATE SERVICE FAILED:", message);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to create service");
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button disabled={!currentOrgId} className="cursor-pointer">
-          Create Service
+        <Button
+          disabled={!currentOrgId}
+          className="rounded-full shadow-lg gap-2 px-6 hover:scale-105 transition-transform active:scale-95"
+        >
+          <Plus className="w-4 h-4" /> Create Service
         </Button>
       </DialogTrigger>
 
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Create Service</DialogTitle>
-        </DialogHeader>
+      <DialogContent className="max-w-[95vw] lg:max-w-[900px] p-0 overflow-hidden rounded-[2.5rem] border-none shadow-2xl">
+        <div className="flex flex-col lg:flex-row h-full max-h-[90vh]">
+          {/* Form Side */}
+          <div className="flex-1 p-8 overflow-y-auto bg-white">
+            <DialogHeader className="mb-6">
+              <DialogTitle className="text-2xl font-bold tracking-tight">
+                Setup New Service
+              </DialogTitle>
+              <DialogDescription>
+                Define what you offer and how much you charge.
+              </DialogDescription>
+            </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Title */}
-          <div>
-            <Label>Title</Label>
-            <Input {...register("title")} />
-            {errors.title && (
-              <p className="text-red-500 text-sm">{errors.title.message}</p>
-            )}
-          </div>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              <div className="space-y-2">
+                <Label className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                  Basic Info
+                </Label>
+                <Input
+                  placeholder="e.g., Executive Coaching"
+                  className="h-12 rounded-xl focus:ring-primary"
+                  {...register("title")}
+                />
+                {errors.title && (
+                  <p className="text-destructive text-xs italic">
+                    {errors.title.message}
+                  </p>
+                )}
+              </div>
 
-          {/* Description */}
-          <div>
-            <Label>Description</Label>
-            <Input {...register("description")} />
-            {errors.description && (
-              <p className="text-red-500 text-sm">
-                {errors.description.message}
-              </p>
-            )}
-          </div>
+              <div className="space-y-2">
+                <Textarea
+                  placeholder="Briefly describe the value of this session..."
+                  className="rounded-xl min-h-[100px] resize-none"
+                  {...register("description")}
+                />
+              </div>
 
-          {/* Duration */}
-          <div>
-            <Label>Duration (minutes)</Label>
-            <Input
-              type="number"
-              {...register("durationInMinutes", { valueAsNumber: true })}
-            />
-            {errors.durationInMinutes && (
-              <p className="text-red-500 text-sm">
-                {errors.durationInMinutes.message}
-              </p>
-            )}
-          </div>
+              <div className="grid grid-cols-2 gap-4 pt-2">
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2 font-semibold">
+                    <Clock className="w-4 h-4" /> Duration
+                  </Label>
+                  <Input
+                    type="number"
+                    className="h-12 rounded-xl"
+                    {...register("durationInMinutes", { valueAsNumber: true })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2 font-semibold">
+                    <IndianRupee className="w-4 h-4" /> Price
+                  </Label>
+                  <Input
+                    type="number"
+                    className="h-12 rounded-xl"
+                    {...register("price", { valueAsNumber: true })}
+                  />
+                </div>
+              </div>
 
-          {/* Price */}
-          <div>
-            <Label>Price</Label>
-            <Input
-              type="number"
-              {...register("price", { valueAsNumber: true })}
-            />
-            {errors.price && (
-              <p className="text-red-500 text-sm">{errors.price.message}</p>
-            )}
-          </div>
+              <div className="space-y-4 pt-2">
+                <Label className="font-semibold">Meeting Format</Label>
+                <Controller
+                  control={control}
+                  name="serviceType"
+                  render={({ field }) => (
+                    <Tabs
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="w-full"
+                    >
+                      <TabsList className="grid w-full grid-cols-2 h-12 rounded-xl p-1 bg-muted/50">
+                        <TabsTrigger
+                          value="ONLINE"
+                          className="rounded-lg gap-2"
+                        >
+                          <Laptop className="w-4 h-4" /> Online
+                        </TabsTrigger>
+                        <TabsTrigger
+                          value="OFFLINE"
+                          className="rounded-lg gap-2"
+                        >
+                          <MapPin className="w-4 h-4" /> Offline
+                        </TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  )}
+                />
+              </div>
 
-          {/* Service Type */}
-          <div>
-            <Label>Service Type</Label>
-            <select
-              {...register("serviceType")}
-              className="w-full border rounded px-2 py-2"
-            >
-              <option value="ONLINE">Online</option>
-              <option value="OFFLINE">Offline</option>
-            </select>
-          </div>
-
-          {/* Location (ONLY if OFFLINE) */}
-          {serviceType === "OFFLINE" && (
-            <div>
-              <Label>Location Address</Label>
-              <Input {...register("locationAddress")} />
-              {errors.locationAddress && (
-                <p className="text-red-500 text-sm">
-                  {errors.locationAddress.message}
-                </p>
+              {formData.serviceType === "OFFLINE" && (
+                <div className="space-y-2 animate-in slide-in-from-top-2 duration-300">
+                  <Label className="font-semibold">Address / Location</Label>
+                  <Input
+                    placeholder="Enter physical location"
+                    className="h-12 rounded-xl bg-slate-50"
+                    {...register("locationAddress")}
+                  />
+                </div>
               )}
-            </div>
-          )}
 
-          {/* Submit */}
-          <Button
-            type="submit"
-            className="w-full cursor-pointer"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Creating..." : "Create"}
-          </Button>
-        </form>
+              <Button
+                type="submit"
+                className="w-full h-14 cursor-pointer text-lg font-bold rounded-2xl mt-4 shadow-xl hover:shadow-primary/20"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 animate-spin" /> Finalizing...
+                  </>
+                ) : (
+                  "Launch Service"
+                )}
+              </Button>
+            </form>
+          </div>
+
+          {/* Preview Side */}
+          <div className="hidden lg:flex w-[380px] bg-slate-100 p-8 flex-col justify-center border-l">
+            <ServicePreview data={formData} />
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );

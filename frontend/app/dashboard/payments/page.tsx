@@ -50,7 +50,10 @@ const PaymentsPage = () => {
         <h2 className="text-2xl font-semibold tracking-tight">Bank Details</h2>
 
         {bank && (
-          <Button onClick={() => setOpenForm(true)} className="cursor-pointer">
+          <Button
+            onClick={() => setOpenForm(true)}
+            className="cursor-pointer hover:scale-110"
+          >
             Edit
           </Button>
         )}
@@ -68,28 +71,32 @@ const PaymentsPage = () => {
         <div className="rounded-2xl border p-6 shadow-sm bg-white space-y-4">
           <div>
             <p className="text-sm text-muted-foreground">Account Holder</p>
-            <p className="font-medium">{bank.accountHolderName}</p>
+            <p className="font-medium">
+              {bank.accountHolderName.toUpperCase()}
+            </p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">Bank</p>
-              <p className="font-medium">{bank.bankName}</p>
+              <p className="font-medium">{bank.bankName.toUpperCase()}</p>
             </div>
 
             <div>
               <p className="text-sm text-muted-foreground">Branch</p>
-              <p className="font-medium">{bank.bankBranch}</p>
+              <p className="font-medium">{bank.bankBranch.toUpperCase()}</p>
             </div>
 
             <div>
               <p className="text-sm text-muted-foreground">IFSC</p>
-              <p className="font-medium">{bank.ifscCode}</p>
+              <p className="font-medium">{bank.ifscCode.toUpperCase()}</p>
             </div>
 
             <div>
               <p className="text-sm text-muted-foreground">Account</p>
-              <p className="font-medium">•••• •••• {bank.accountNumberLast4}</p>
+              <p className="font-medium">
+                •••• •••• {bank?.accountNumberLast4}
+              </p>
             </div>
           </div>
         </div>
@@ -97,7 +104,10 @@ const PaymentsPage = () => {
         /* Empty State */
         <div className="border rounded-2xl p-6 text-center space-y-4">
           <p className="text-muted-foreground">No bank details added yet</p>
-          <Button onClick={() => setOpenForm(true)} className="cursor-pointer">
+          <Button
+            onClick={() => setOpenForm(true)}
+            className="cursor-pointer hover:scale-110"
+          >
             Add Bank Details
           </Button>
         </div>

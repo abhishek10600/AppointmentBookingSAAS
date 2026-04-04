@@ -93,7 +93,7 @@ const AvailabilityPage = () => {
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="text-red-500 hover:text-red-600"
+                        className="text-red-500 hover:text-red-600 cursor-pointer"
                         onClick={async () => {
                           try {
                             await dispatch(

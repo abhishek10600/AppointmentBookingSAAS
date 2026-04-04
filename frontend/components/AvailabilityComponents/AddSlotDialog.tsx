@@ -48,7 +48,6 @@ const AddSlotDialog = ({ day }: { day: number }) => {
 
       toast.success("Slot added");
 
-      // ✅ UX FIX
       setOpen(false);
       setStartTime("09:00");
       setEndTime("17:00");
@@ -65,7 +64,7 @@ const AddSlotDialog = ({ day }: { day: number }) => {
         <Button
           size="sm"
           variant="secondary"
-          className="hover:scale-105 transition"
+          className="hover:scale-110 transition cursor-pointer"
         >
           + Add Slot
         </Button>
