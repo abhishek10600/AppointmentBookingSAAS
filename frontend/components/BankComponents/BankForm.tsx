@@ -7,6 +7,14 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import {
+  User,
+  CreditCard,
+  Landmark,
+  MapPin,
+  Hash,
+  Loader2,
+} from "lucide-react";
 
 type Props = {
   defaultValues?: Partial<BankFormData>;
@@ -32,101 +40,136 @@ const BankForm = ({ defaultValues, maskedAccount, onClose }: Props) => {
           ? { accountNumber: data.accountNumber }
           : {}),
       };
-
       await bankApiService.upsertBankDetail(payload);
-
-      toast.success("Bank details saved successfully");
+      toast.success("Security update successful");
       onClose();
     } catch {
-      toast.error("Something went wrong");
+      toast.error("Security handshake failed. Try again.");
     }
   };
 
   return (
-    <div className="space-y-5">
-      {maskedAccount && (
-        <p className="text-sm text-muted-foreground">
-          Current Account: •••• ••••
-        </p>
-      )}
-
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Account Holder Name</label>
-          <Input {...register("accountHolderName")} />
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {/* Holder Name */}
+        <div className="space-y-1.5">
+          <label className="text-[11px] font-black text-slate-400 uppercase ml-1 flex items-center gap-1">
+            <User className="w-3 h-3" /> Account Holder
+          </label>
+          <Input
+            className="h-12 rounded-xl border-slate-200 focus:ring-primary/20"
+            placeholder="John Doe"
+            {...register("accountHolderName")}
+          />
           {errors.accountHolderName && (
-            <p className="text-red-500 text-sm">
+            <p className="text-red-500 text-[10px] font-bold ml-1">
               {errors.accountHolderName.message}
             </p>
           )}
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Account Number</label>
+        {/* IFSC Code */}
+        <div className="space-y-1.5">
+          <label className="text-[11px] font-black text-slate-400 uppercase ml-1 flex items-center gap-1">
+            <Hash className="w-3 h-3" /> IFSC Code
+          </label>
           <Input
-            placeholder="Enter new account number"
+            className="h-12 rounded-xl border-slate-200 uppercase"
+            placeholder="HDFC0001234"
+            {...register("ifscCode")}
+            onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
+          />
+          {errors.ifscCode && (
+            <p className="text-red-500 text-[10px] font-bold ml-1">
+              {errors.ifscCode.message}
+            </p>
+          )}
+        </div>
+
+        {/* Account Number */}
+        <div className="space-y-1.5 md:col-span-2">
+          <label className="text-[11px] font-black text-slate-400 uppercase ml-1 flex items-center gap-1">
+            <CreditCard className="w-3 h-3" /> New Account Number
+          </label>
+          <Input
+            className="h-12 rounded-xl border-slate-200 font-mono tracking-widest"
+            placeholder={maskedAccount ? "•••• •••• ••••" : "0000 0000 0000"}
             {...register("accountNumber")}
             onChange={(e) =>
               (e.target.value = e.target.value.replace(/\D/g, ""))
             }
           />
-          <p className="text-xs text-muted-foreground">
-            Leave empty to keep existing account
+          <p className="text-[10px] text-slate-400 font-bold italic ml-1">
+            {maskedAccount
+              ? "Leave blank to keep existing account"
+              : "Enter digits only"}
           </p>
           {errors.accountNumber && (
-            <p className="text-red-500 text-sm">
+            <p className="text-red-500 text-[10px] font-bold ml-1">
               {errors.accountNumber.message}
             </p>
           )}
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium">IFSC Code</label>
+        {/* Bank Name */}
+        <div className="space-y-1.5">
+          <label className="text-[11px] font-black text-slate-400 uppercase ml-1 flex items-center gap-1">
+            <Landmark className="w-3 h-3" /> Bank Name
+          </label>
           <Input
-            {...register("ifscCode")}
-            onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
+            className="h-12 rounded-xl border-slate-200"
+            placeholder="Global Bank"
+            {...register("bankName")}
           />
-          {errors.ifscCode && (
-            <p className="text-red-500 text-sm">{errors.ifscCode.message}</p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Bank Name</label>
-          <Input {...register("bankName")} />
           {errors.bankName && (
-            <p className="text-red-500 text-sm">{errors.bankName.message}</p>
+            <p className="text-red-500 text-[10px] font-bold ml-1">
+              {errors.bankName.message}
+            </p>
           )}
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Branch</label>
-          <Input {...register("bankBranch")} />
+        {/* Branch */}
+        <div className="space-y-1.5">
+          <label className="text-[11px] font-black text-slate-400 uppercase ml-1 flex items-center gap-1">
+            <MapPin className="w-3 h-3" /> Branch Name
+          </label>
+          <Input
+            className="h-12 rounded-xl border-slate-200"
+            placeholder="Downtown Branch"
+            {...register("bankBranch")}
+          />
           {errors.bankBranch && (
-            <p className="text-red-500 text-sm">{errors.bankBranch.message}</p>
+            <p className="text-red-500 text-[10px] font-bold ml-1">
+              {errors.bankBranch.message}
+            </p>
           )}
         </div>
+      </div>
 
-        <div className="flex flex-col gap-2 pt-2">
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="cursor-pointer py-5"
-          >
-            {isSubmitting ? "Saving..." : "Save Changes"}
-          </Button>
-
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={onClose}
-            className="cursor-pointer py-5"
-          >
-            Cancel
-          </Button>
-        </div>
-      </form>
-    </div>
+      <div className="flex flex-col gap-3 pt-6 border-t border-slate-100">
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="h-14 rounded-2xl font-black text-lg transition-all shadow-xl shadow-primary/10 active:scale-95 cursor-pointer"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Saving Account
+            </>
+          ) : (
+            "Confirm Payout Details"
+          )}
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={onClose}
+          className="h-12 rounded-xl font-bold text-slate-400 hover:text-slate-900 cursor-pointer"
+        >
+          Cancel
+        </Button>
+      </div>
+    </form>
   );
 };
 

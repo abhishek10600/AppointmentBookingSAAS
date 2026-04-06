@@ -1,3 +1,24 @@
+// "use client";
+// import { Calendar } from "@/components/ui/calendar";
+
+// export default function DatePicker({ value, onChange }: any) {
+//   return (
+//     <div className="rounded-[2rem] border-2 border-slate-100 p-4 shadow-sm bg-white overflow-hidden">
+//       <Calendar
+//         mode="single"
+//         selected={value}
+//         onSelect={onChange}
+//         disabled={(date) => {
+//           const today = new Date();
+//           today.setHours(0, 0, 0, 0);
+//           return date < today;
+//         }}
+//         className="w-full flex justify-center"
+//       />
+//     </div>
+//   );
+// }
+
 "use client";
 
 import { Calendar } from "@/components/ui/calendar";

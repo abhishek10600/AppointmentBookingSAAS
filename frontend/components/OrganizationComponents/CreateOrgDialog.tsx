@@ -24,7 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Loader2, Link2, Globe2, Briefcase } from "lucide-react";
+import { Loader2, Link2, Globe2, Briefcase, Plus } from "lucide-react";
 
 export default function CreateOrgDialog({
   trigger,
@@ -86,8 +86,8 @@ export default function CreateOrgDialog({
     >
       <DialogTrigger asChild>
         {trigger || (
-          <Button className="rounded-full shadow-lg hover:shadow-xl transition-all px-6 cursor-pointer">
-            Create Organization
+          <Button className="rounded-2xl px-6 h-12 font-bold shadow-lg shadow-primary/10 transition-all hover:scale-105 active:scale-95 gap-2 cursor-pointer">
+            <Plus className="w-4 h-4" /> Create Organization
           </Button>
         )}
       </DialogTrigger>

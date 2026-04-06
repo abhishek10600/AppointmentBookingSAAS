@@ -49,7 +49,9 @@ export default function ServicesPage() {
     <div className="max-w-7xl mx-auto space-y-10 p-6">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight">Services</h1>
+          <h1 className="text-5xl font-black tracking-tighter text-slate-900">
+            Services
+          </h1>
           <p className="text-muted-foreground mt-2 text-lg">
             Configure and preview your booking offerings.
           </p>
@@ -99,6 +101,7 @@ export default function ServicesPage() {
                   </div>
                   <Switch
                     checked={service.isActive}
+                    className="cursor-pointer"
                     onCheckedChange={(val) =>
                       dispatch(
                         updateServiceThunk({
@@ -141,7 +144,7 @@ export default function ServicesPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive rounded-full transition-colors"
+                    className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive rounded-full transition-colors cursor-pointer"
                     onClick={async () => {
                       if (confirm("Permanently delete this service?")) {
                         try {

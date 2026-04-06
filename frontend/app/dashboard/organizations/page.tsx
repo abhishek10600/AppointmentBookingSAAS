@@ -22,11 +22,13 @@ const OrganizationPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 p-6">
+    <div className="max-w-7xl space-y-8 p-6">
       {/* Header: More breathability */}
       <div className="flex justify-between items-end border-b pb-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Workspaces</h1>
+          <h1 className="text-5xl font-black tracking-tighter text-slate-900">
+            Organizations
+          </h1>
           <p className="text-muted-foreground mt-1">
             Select or create an organization to manage your appointments.
           </p>

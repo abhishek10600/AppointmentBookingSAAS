@@ -10,7 +10,9 @@ const Navbar = () => {
   return (
     <header className="h-16 border-b bg-background flex items-center justify-between px-6">
       {/* Left */}
-      <h1 className="text-lg font-semibold">Schedora</h1>
+      <h1 className="text-3xl font-black tracking-tighter text-slate-900">
+        Schedora
+      </h1>
 
       {/* Right */}
       <div className="flex items-center gap-4">

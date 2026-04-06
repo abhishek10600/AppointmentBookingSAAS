@@ -81,7 +81,7 @@ export default function EditServiceDialog({ service }: { service: IService }) {
         <Button
           variant="outline"
           size="sm"
-          className="rounded-xl px-4 gap-2 hover:bg-primary hover:text-primary-foreground transition-all duration-200"
+          className="rounded-xl px-4 gap-2 hover:bg-primary hover:text-primary-foreground transition-all duration-200 cursor-pointer"
         >
           <Edit3 className="w-3.5 h-3.5" /> Edit
         </Button>
@@ -155,7 +155,7 @@ export default function EditServiceDialog({ service }: { service: IService }) {
               <div className="flex gap-3 pt-6">
                 <Button
                   type="submit"
-                  className="w-full h-14 text-lg font-bold rounded-2xl shadow-lg transition-all active:scale-[0.98]"
+                  className="w-full h-14 text-lg font-bold rounded-2xl shadow-lg transition-all active:scale-[0.98] cursor-pointer"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (

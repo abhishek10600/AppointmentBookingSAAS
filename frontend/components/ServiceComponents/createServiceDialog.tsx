@@ -79,7 +79,7 @@ export default function CreateServiceDialog() {
       <DialogTrigger asChild>
         <Button
           disabled={!currentOrgId}
-          className="rounded-full shadow-lg gap-2 px-6 hover:scale-105 transition-transform active:scale-95"
+          className="rounded-2xl px-6 h-12 font-bold shadow-lg shadow-primary/10 transition-all hover:scale-105 active:scale-95 gap-2 cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Create Service
         </Button>
