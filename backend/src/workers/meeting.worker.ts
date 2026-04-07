@@ -6,6 +6,12 @@ import { google } from "googleapis";
 import { deadLetterQueue } from "../queues/dead-letter.queue.js";
 import { queueBookingConfirmationEmail } from "../modules/email/email.service.js";
 
+oauth2Client.on("tokens", async (tokens) => {
+  if (tokens.access_token && tokens.expiry_date) {
+    console.log("Token refreshed");
+  }
+});
+
 new Worker(
   "meetingQueue",
   async (job) => {
@@ -30,15 +36,16 @@ new Worker(
         throw new Error("Booking not found");
       }
 
-      console.log({ booking });
+      // console.log({ booking });
 
       const integration = booking.organization.googleIntegration;
 
       if (!integration) {
+        console.log("Google integration not found");
         return;
       }
 
-      console.log({ integration });
+      // console.log({ integration });
 
       oauth2Client.setCredentials({
         access_token: integration.accessToken,
@@ -47,17 +54,32 @@ new Worker(
       });
 
       oauth2Client.on("tokens", async (tokens) => {
-        if (tokens.access_token) {
-          await prisma.googleIntegration.update({
-            where: {
-              organizationId: booking.organizationId,
-            },
-            data: {
-              accessToken: tokens.access_token,
-              expiryDate: new Date(tokens.expiry_date!),
-            },
-          });
-        }
+        // if (tokens.access_token) {
+        //   await prisma.googleIntegration.update({
+        //     where: {
+        //       organizationId: booking.organizationId,
+        //     },
+        //     data: {
+        //       accessToken: tokens.access_token,
+        //       expiryDate: new Date(tokens.expiry_date!),
+        //     },
+        //   });
+        // }
+
+        await prisma.googleIntegration.update({
+          where: {
+            organizationId: booking.organizationId,
+          },
+          data: {
+            accessToken: tokens.access_token ?? integration.accessToken,
+            expiryDate: tokens.expiry_date
+              ? new Date(tokens.expiry_date)
+              : integration.expiryDate,
+            ...(tokens.refresh_token && {
+              refreshToken: tokens.refresh_token,
+            }),
+          },
+        });
       });
 
       const calendar = google.calendar({
@@ -87,9 +109,9 @@ new Worker(
         conferenceDataVersion: 1,
       });
 
-      console.log(event);
+      // console.log(event);
 
-      const meetLink = event.data.conferenceData?.entryPoints?.[0]?.uri;
+      const meetLink = event.data.conferenceData?.entryPoints?.[0]?.uri || null;
       console.log({ meetLink });
 
       await prisma.booking.update({
@@ -98,13 +120,14 @@ new Worker(
         },
         data: {
           meetingLink: meetLink,
+          status: "CONFIRMED",
         },
       });
 
       await queueBookingConfirmationEmail(booking.id);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Job failed: ", job.id);
-      console.error("Reason for job failure: ", error);
+      console.error("Reason for job failure: ", error?.message);
 
       await deadLetterQueue.add("failed-meetingLinkCreation", {
         jobName: job.name,
@@ -117,5 +140,6 @@ new Worker(
   },
   {
     connection: redisConnection,
+    concurrency: 5,
   }
 );

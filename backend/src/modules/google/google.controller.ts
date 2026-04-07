@@ -22,6 +22,7 @@ export const googleAuth = catchAsync(async (req: Request, res: Response) => {
     access_type: "offline",
     scope: SCOPES,
     prompt: "consent",
+    include_granted_scopes: false,
     // state: req.user?.organizationId,
     // state: "eface8e7-f4e4-4076-be1d-56941cd6cade",
     state: organizationId,
@@ -33,7 +34,11 @@ export const googleAuth = catchAsync(async (req: Request, res: Response) => {
 export const googleCallback = catchAsync(
   async (req: Request, res: Response) => {
     const code = req.query.code as string;
-    console.log({ code });
+    // console.log({ code });
+
+    if (!code) {
+      throw new ApiError(400, "Authorization code missing.");
+    }
 
     const { tokens } = await oauth2Client.getToken(code);
     // console.log({ tokens });
@@ -51,14 +56,20 @@ export const googleCallback = catchAsync(
 
     const organizationId = req.query.state as string;
 
+    if (!organizationId) {
+      throw new ApiError(400, "Invalid state");
+    }
+
     await prisma.googleIntegration.upsert({
       where: {
         organizationId,
       },
       update: {
         accessToken: tokens.access_token!,
-        refreshToken: tokens.refresh_token!,
         expiryDate: new Date(tokens.expiry_date!),
+        ...(tokens.refresh_token && {
+          refreshToken: tokens.refresh_token,
+        }),
       },
       create: {
         organizationId,

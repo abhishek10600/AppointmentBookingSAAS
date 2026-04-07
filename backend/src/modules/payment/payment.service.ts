@@ -104,8 +104,8 @@ export const verifyPaymentService = async (data: any) => {
     .update(razorpay_order_id + "|" + razorpay_payment_id)
     .digest("hex");
 
-  console.log({ generatedSignature });
-  console.log({ razorpay_signature });
+  // console.log({ generatedSignature });
+  // console.log({ razorpay_signature });
 
   if (generatedSignature !== razorpay_signature) {
     throw new ApiError(400, "Invalid payment signature");

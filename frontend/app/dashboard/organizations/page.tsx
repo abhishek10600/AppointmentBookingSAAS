@@ -58,7 +58,10 @@ const OrganizationPage = () => {
           <div className="mt-6">
             <CreateOrgDialog
               trigger={
-                <Button size="lg">
+                <Button
+                  size="lg"
+                  className="rounded-2xl px-6 h-12 font-bold shadow-lg shadow-primary/10 transition-all hover:scale-105 active:scale-95 gap-2 cursor-pointer"
+                >
                   <Plus className="mr-2 h-4 w-4" /> Create First Org
                 </Button>
               }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { registerSchema, RegisterUserFormData } from "@/lib/validators/auth";
 import { useAppDispatch } from "@/redux/hooks";
 import { registerUserThunk } from "@/redux/slices/authSlice";
@@ -17,11 +18,20 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import {
+  Loader2,
+  Eye,
+  EyeOff,
+  User,
+  Mail,
+  Lock,
+  AlertCircle,
+} from "lucide-react";
 
 const RegisterForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -35,127 +45,121 @@ const RegisterForm = () => {
   const onSubmit = async (data: RegisterUserFormData) => {
     try {
       await dispatch(registerUserThunk(data)).unwrap();
-      toast.success("Account created successfully!");
+      toast.success("Account created!");
       router.push("/dashboard");
     } catch (error: any) {
-      console.log(error);
-
       const message =
-        typeof error === "string"
-          ? error
-          : error?.message || "Registration failed";
-
+        typeof error === "string" ? error : error?.message || "Failed";
       toast.error(message);
-
-      // Optional: show inline error
       setError("email", { message });
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted px-4">
-      <Card className="w-full max-w-md rounded-2xl shadow-2xl border border-border/50">
-        <CardHeader className="space-y-2 text-center">
-          <CardTitle className="text-3xl font-bold tracking-tight">
-            Create Your Account
-          </CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">
-            Enter Your Details
-          </CardDescription>
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+      <Card className="w-full max-w-md rounded-[2rem] border-none shadow-xl bg-white overflow-hidden">
+        <CardHeader className="text-center pt-8">
+          <CardTitle className="text-2xl font-black">Create Account</CardTitle>
+          <CardDescription>Join our platform today</CardDescription>
         </CardHeader>
 
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Email */}
-            <div className="space-y-1">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="John Doe"
-                className="h-11"
-                {...register("name")}
-              />
-              {/* Fixed height error */}
-              <p className="text-xs text-red-500 min-h-[16px]">
-                {errors.name?.message}
-              </p>
-            </div>
-            {/* Email */}
-            <div className="space-y-1">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="john@example.com"
-                className="h-11"
-                {...register("email")}
-              />
-              {/* Fixed height error */}
-              <p className="text-xs text-red-500 min-h-[16px]">
-                {errors.email?.message}
-              </p>
-            </div>
-
-            {/* Password */}
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <span
-                  className="text-xs text-muted-foreground hover:text-primary cursor-pointer"
-                  onClick={() => console.log("Forgot password")}
-                >
-                  Forgot?
-                </span>
+        <CardContent className="p-8 space-y-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
+            {/* Name Field */}
+            <div className="relative space-y-1.5">
+              <Label className="text-[10px] font-black uppercase text-slate-400 ml-1">
+                Name
+              </Label>
+              <div className="relative">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Input
+                  {...register("name")}
+                  placeholder="John Doe"
+                  className={`pl-11 h-12 rounded-xl bg-slate-50 border-none transition-all ${errors.name ? "ring-2 ring-red-500/50" : "focus-visible:ring-2 focus-visible:ring-primary/20"}`}
+                />
               </div>
-
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                className="h-11"
-                {...register("password")}
-              />
-
-              {/* Fixed height error */}
-              <p className="text-xs text-red-500 min-h-[16px]">
-                {errors.password?.message}
-              </p>
+              {/* Error Message (Absolute) */}
+              {errors.name && (
+                <p className="absolute -bottom-5 left-1 text-[10px] font-bold text-red-500 uppercase flex items-center gap-1 animate-in fade-in slide-in-from-top-1">
+                  <AlertCircle className="w-3 h-3" /> {errors.name.message}
+                </p>
+              )}
             </div>
 
-            {/* Submit */}
+            {/* Email Field */}
+            <div className="relative space-y-1.5">
+              <Label className="text-[10px] font-black uppercase text-slate-400 ml-1">
+                Email
+              </Label>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Input
+                  {...register("email")}
+                  type="email"
+                  placeholder="john@example.com"
+                  className={`pl-11 h-12 rounded-xl bg-slate-50 border-none transition-all ${errors.email ? "ring-2 ring-red-500/50" : "focus-visible:ring-2 focus-visible:ring-primary/20"}`}
+                />
+              </div>
+              {errors.email && (
+                <p className="absolute -bottom-5 left-1 text-[10px] font-bold text-red-500 uppercase flex items-center gap-1 animate-in fade-in slide-in-from-top-1">
+                  <AlertCircle className="w-3 h-3" /> {errors.email.message}
+                </p>
+              )}
+            </div>
+
+            {/* Password Field */}
+            <div className="relative space-y-1.5">
+              <Label className="text-[10px] font-black uppercase text-slate-400 ml-1">
+                Password
+              </Label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Input
+                  {...register("password")}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className={`pl-11 pr-11 h-12 rounded-xl bg-slate-50 border-none transition-all ${errors.password ? "ring-2 ring-red-500/50" : "focus-visible:ring-2 focus-visible:ring-primary/20"}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4 cursor-pointer" />
+                  ) : (
+                    <Eye className="w-4 h-4 cursor-pointer" />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="absolute -bottom-5 left-1 text-[10px] font-bold text-red-500 uppercase flex items-center gap-1 animate-in fade-in slide-in-from-top-1">
+                  <AlertCircle className="w-3 h-3" /> {errors.password.message}
+                </p>
+              )}
+            </div>
+
             <Button
               type="submit"
-              className="w-full h-11 text-base font-semibold cursor-pointer"
               disabled={isSubmitting}
+              className="w-full h-14 rounded-2xl font-black text-base shadow-lg hover:scale-[1.01] active:scale-95 transition-all mt-4 cursor-pointer"
             >
               {isSubmitting ? (
-                <span className="flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Creating Your Account...
-                </span>
+                <Loader2 className="animate-spin w-5 h-5" />
               ) : (
                 "Register"
               )}
             </Button>
           </form>
 
-          {/* Divider */}
-          <div className="flex items-center my-6">
-            <div className="flex-1 h-px bg-border" />
-            <span className="px-3 text-xs text-muted-foreground">OR</span>
-            <div className="flex-1 h-px bg-border" />
-          </div>
-
-          {/* Register */}
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-center text-sm font-medium text-slate-400">
             Already have an account?{" "}
-            <span
-              className="font-medium text-primary hover:underline cursor-pointer"
+            <button
               onClick={() => router.push("/auth/login")}
+              className="text-primary font-black hover:underline cursor-pointer"
             >
               Login
-            </span>
+            </button>
           </p>
         </CardContent>
       </Card>
