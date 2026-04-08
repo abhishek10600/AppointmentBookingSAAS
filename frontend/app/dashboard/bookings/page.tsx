@@ -9,15 +9,10 @@ import {
   Loader2,
   Calendar,
   Mail,
-  User,
   Briefcase,
   XCircle,
-  CheckCircle2,
-  Clock,
-  MoreVertical,
-  ExternalLink,
-  Search,
   Filter,
+  Search,
   ShieldAlert,
 } from "lucide-react";
 
@@ -68,7 +63,7 @@ const BookingsPage = () => {
 
   if (!currentOrgId)
     return (
-      <div className="p-20 text-center font-medium">
+      <div className="p-20 text-center font-medium text-muted-foreground">
         Please select an organization.
       </div>
     );
@@ -78,10 +73,10 @@ const BookingsPage = () => {
       {/* Header & Stats Section */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div className="space-y-1">
-          <h1 className="text-5xl font-black tracking-tighter text-slate-900">
+          <h1 className="text-5xl font-black tracking-tighter text-foreground">
             Your Schedule
           </h1>
-          <p className="text-slate-500 font-medium text-lg">
+          <p className="text-muted-foreground font-medium text-lg">
             You have {bookings.filter((b) => b.status !== "CANCELLED").length}{" "}
             active appointments.
           </p>
@@ -89,19 +84,19 @@ const BookingsPage = () => {
 
         <div className="flex items-center gap-3 w-full md:w-auto">
           <div className="relative flex-1 md:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-4.5 z-[100] w-4 h-4 text-muted-foreground" />
             <Input
               placeholder="Search clients..."
-              className="pl-10 h-12 rounded-2xl border-slate-200 bg-white/50 backdrop-blur-sm"
+              className="pl-10 h-12 rounded-2xl border-input bg-background/50 backdrop-blur-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <Button
             variant="outline"
-            className="h-12 w-12 rounded-2xl border-slate-200 p-0"
+            className="h-12 w-12 rounded-2xl border-input p-0"
           >
-            <Filter className="w-5 h-5 text-slate-600" />
+            <Filter className="w-5 h-5 text-foreground" />
           </Button>
         </div>
       </header>
@@ -109,19 +104,19 @@ const BookingsPage = () => {
       {isLoading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-4">
           <Loader2 className="w-10 h-10 animate-spin text-primary" />
-          <p className="text-slate-400 font-bold animate-pulse">
+          <p className="text-muted-foreground font-bold animate-pulse">
             Syncing your calendar...
           </p>
         </div>
       ) : filteredBookings.length === 0 ? (
-        <div className="text-center py-32 bg-slate-50 rounded-[3rem] border-4 border-dashed border-slate-100">
-          <div className="bg-white w-20 h-20 rounded-full shadow-xl flex items-center justify-center mx-auto mb-6">
-            <Calendar className="w-8 h-8 text-slate-300" />
+        <div className="text-center py-32 bg-muted/30 rounded-[3rem] border-4 border-dashed border-muted">
+          <div className="bg-background w-20 h-20 rounded-full shadow-xl flex items-center justify-center mx-auto mb-6">
+            <Calendar className="w-8 h-8 text-muted-foreground/40" />
           </div>
-          <h3 className="text-2xl font-bold text-slate-800">
+          <h3 className="text-2xl font-bold text-foreground">
             No bookings found
           </h3>
-          <p className="text-slate-500 mt-2 mb-8">
+          <p className="text-muted-foreground mt-2 mb-8">
             Try sharing your booking link to get started!
           </p>
           <Button className="rounded-full px-8 h-12 font-bold shadow-lg shadow-primary/20">
@@ -138,12 +133,16 @@ const BookingsPage = () => {
             return (
               <Card
                 key={booking.id}
-                className={`group relative overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-300 rounded-[2rem] bg-white p-1 ${isCancelled ? "opacity-60" : ""}`}
+                className={`group relative overflow-hidden border-none shadow-sm hover:shadow-xl transition-all duration-300 rounded-[2rem] bg-card p-1 ${isCancelled ? "opacity-60" : ""}`}
               >
                 <div className="flex flex-col lg:flex-row items-stretch lg:items-center">
-                  {/* Date/Time Block (Visual Anchor) */}
+                  {/* Date/Time Block */}
                   <div
-                    className={`flex flex-row lg:flex-col items-center justify-center p-6 lg:w-40 gap-1 rounded-[1.8rem] transition-colors ${isCancelled ? "bg-slate-100 text-slate-400" : "bg-primary text-primary-foreground"}`}
+                    className={`flex flex-row lg:flex-col items-center justify-center p-6 lg:w-40 gap-1 rounded-[1.8rem] transition-colors ${
+                      isCancelled
+                        ? "bg-muted text-muted-foreground"
+                        : "bg-primary text-primary-foreground"
+                    }`}
                   >
                     <span className="text-xs font-black uppercase tracking-widest opacity-80">
                       {format(date, "MMM")}
@@ -159,16 +158,17 @@ const BookingsPage = () => {
                   {/* Main Info */}
                   <div className="flex-1 p-6 lg:px-8 space-y-4">
                     <div className="flex flex-wrap items-center gap-3">
-                      <h3 className="text-2xl font-bold tracking-tight text-slate-900 capitalize">
+                      <h3 className="text-2xl font-bold tracking-tight text-foreground capitalize">
                         {booking.customerName}
                       </h3>
                       <Badge
+                        variant="secondary"
                         className={`rounded-full px-3 py-1 text-[10px] font-black border-none ${
                           isCancelled
-                            ? "bg-slate-200 text-slate-500"
+                            ? "bg-muted text-muted-foreground"
                             : isBookingPast
-                              ? "bg-blue-100 text-blue-600"
-                              : "bg-green-100 text-green-600"
+                              ? "bg-blue-500/10 text-blue-500"
+                              : "bg-green-500/10 text-green-500"
                         }`}
                       >
                         {isCancelled
@@ -180,14 +180,14 @@ const BookingsPage = () => {
                     </div>
 
                     <div className="grid sm:grid-cols-2 gap-4 text-sm">
-                      <div className="flex items-center gap-3 text-slate-500 group-hover:text-slate-900 transition-colors">
-                        <div className="p-2 bg-slate-50 rounded-lg">
+                      <div className="flex items-center gap-3 text-muted-foreground group-hover:text-foreground transition-colors">
+                        <div className="p-2 bg-muted rounded-lg">
                           <Mail className="w-4 h-4" />
                         </div>
                         {booking.customerEmail}
                       </div>
-                      <div className="flex items-center gap-3 text-slate-500 group-hover:text-slate-900 transition-colors">
-                        <div className="p-2 bg-slate-50 rounded-lg">
+                      <div className="flex items-center gap-3 text-muted-foreground group-hover:text-foreground transition-colors">
+                        <div className="p-2 bg-muted rounded-lg">
                           <Briefcase className="w-4 h-4" />
                         </div>
                         {booking.service?.title || "Session"}
@@ -202,7 +202,7 @@ const BookingsPage = () => {
                         <AlertDialogTrigger asChild>
                           <Button
                             variant="ghost"
-                            className="h-14 w-14 rounded-2xl text-red-500 hover:text-destructive hover:bg-destructive/5 transition-all cursor-pointer"
+                            className="h-14 w-14 rounded-2xl text-destructive hover:text-destructive-foreground hover:bg-destructive transition-all cursor-pointer"
                           >
                             {cancellingId === booking.id ? (
                               <Loader2 className="w-5 h-5 animate-spin" />
@@ -211,18 +211,18 @@ const BookingsPage = () => {
                             )}
                           </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="rounded-[2.5rem] border-none shadow-2xl p-8">
+                        <AlertDialogContent className="rounded-[2.5rem] border-border bg-card shadow-2xl p-8">
                           <div className="space-y-6 text-center">
                             <div className="mx-auto w-20 h-20 bg-destructive/10 rounded-full flex items-center justify-center">
                               <ShieldAlert className="w-10 h-10 text-destructive animate-bounce" />
                             </div>
                             <AlertDialogHeader>
-                              <AlertDialogTitle className="text-3xl font-black tracking-tight">
+                              <AlertDialogTitle className="text-3xl font-black tracking-tight text-foreground">
                                 Critical Action
                               </AlertDialogTitle>
-                              <AlertDialogDescription className="text-slate-500 text-lg leading-relaxed">
+                              <AlertDialogDescription className="text-muted-foreground text-lg leading-relaxed">
                                 You are about to cancel{" "}
-                                <span className="font-bold text-slate-900">
+                                <span className="font-bold text-foreground">
                                   {booking.customerName}'s
                                 </span>{" "}
                                 appointment. <br />
@@ -234,11 +234,11 @@ const BookingsPage = () => {
                             <AlertDialogFooter className="flex-col sm:flex-col gap-3">
                               <AlertDialogAction
                                 onClick={() => handleCancel(booking.id)}
-                                className="h-14 w-full bg-destructive text-white hover:bg-destructive/90 rounded-2xl font-black text-xl shadow-xl shadow-destructive/20"
+                                className="h-14 w-full bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-2xl font-black text-xl shadow-xl shadow-destructive/20"
                               >
                                 Cancel Appointment
                               </AlertDialogAction>
-                              <AlertDialogCancel className="h-12 w-full border-none font-bold text-slate-400 hover:text-slate-900 hover:bg-transparent">
+                              <AlertDialogCancel className="h-12 w-full border-none font-bold text-muted-foreground hover:text-foreground hover:bg-transparent">
                                 Keep appointment
                               </AlertDialogCancel>
                             </AlertDialogFooter>

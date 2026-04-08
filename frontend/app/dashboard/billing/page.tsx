@@ -60,16 +60,16 @@ const BillingPage = () => {
     <div className="max-w-7xl space-y-12 p-6 pb-24">
       {/* Header Section */}
       <div className="text-center space-y-4">
-        <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-none px-4 py-1 rounded-full font-bold">
+        <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-none px-4 py-1 rounded-full font-bold">
           PRICING & PLANS
         </Badge>
-        <h1 className="text-5xl font-black tracking-tighter text-slate-900">
+        <h1 className="text-5xl font-black tracking-tighter text-foreground">
           Scale your business,{" "}
           <span className="text-primary underline decoration-primary/20">
             not your fees.
           </span>
         </h1>
-        <p className="text-slate-500 text-xl font-medium max-w-2xl mx-auto">
+        <p className="text-muted-foreground text-xl font-medium max-w-2xl mx-auto">
           Choose the plan that fits your current stage. Switch or cancel
           anytime.
         </p>
@@ -78,13 +78,17 @@ const BillingPage = () => {
       <div className="grid lg:grid-cols-2 gap-8 items-stretch">
         {/* FREE PLAN CARD */}
         <Card
-          className={`rounded-[3rem] border-2 transition-all p-2 ${org?.plan === "FREE" ? "border-slate-200 bg-white shadow-sm" : "border-transparent opacity-60"}`}
+          className={`rounded-[3rem] border-2 transition-all p-2 ${
+            org?.plan === "FREE"
+              ? "border-border bg-card shadow-sm"
+              : "border-transparent opacity-60"
+          }`}
         >
           <CardContent className="p-10 flex flex-col h-full">
             <div className="flex justify-between items-start mb-8">
               <div className="space-y-1">
                 <h3 className="text-2xl font-bold">Starter</h3>
-                <p className="text-slate-500 text-sm font-medium">
+                <p className="text-muted-foreground text-sm font-medium">
                   For those just starting out.
                 </p>
               </div>
@@ -93,14 +97,14 @@ const BillingPage = () => {
               </div>
             </div>
 
-            <div className="bg-slate-50 rounded-3xl p-6 mb-8 border border-slate-100">
-              <div className="flex items-center gap-3 mb-2 text-amber-600">
+            <div className="bg-muted rounded-3xl p-6 mb-8 border border-border">
+              <div className="flex items-center gap-3 mb-2 text-amber-500">
                 <Percent className="w-5 h-5 font-bold" />
                 <span className="font-black text-lg tracking-tight">
                   8% Platform Fee
                 </span>
               </div>
-              <p className="text-xs text-slate-500 leading-relaxed font-medium">
+              <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                 We take a small cut from each booking so you can start with zero
                 upfront costs.
               </p>
@@ -109,7 +113,7 @@ const BillingPage = () => {
             {org?.plan === "FREE" ? (
               <Button
                 variant="outline"
-                className="w-full h-14 rounded-2xl border-2 font-bold pointer-events-none text-slate-400"
+                className="w-full h-14 rounded-2xl border-2 font-bold pointer-events-none text-muted-foreground/50"
               >
                 Current Plan
               </Button>
@@ -126,10 +130,14 @@ const BillingPage = () => {
 
         {/* PRO PLAN CARD (The "Recommended" one) */}
         <Card
-          className={`rounded-[3rem] border-4 relative transition-all p-2 ${org?.plan === "PRO" ? "border-emerald-500 shadow-emerald-100" : "border-primary shadow-2xl shadow-primary/20 bg-slate-900 text-white"}`}
+          className={`rounded-[3rem] border-4 relative transition-all p-2 ${
+            org?.plan === "PRO"
+              ? "border-emerald-500 shadow-emerald-500/10 bg-card"
+              : "border-primary shadow-2xl shadow-primary/20 bg-primary text-primary-foreground"
+          }`}
         >
           {org?.plan !== "PRO" && (
-            <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-1 rounded-full text-xs font-black tracking-widest shadow-lg">
+            <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-primary-foreground text-primary px-6 py-1 rounded-full text-xs font-black tracking-widest shadow-lg border border-primary">
               MOST POPULAR
             </div>
           )}
@@ -144,7 +152,11 @@ const BillingPage = () => {
                   <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
                 </div>
                 <p
-                  className={`${org?.plan === "PRO" ? "text-slate-500" : "text-slate-400"} text-sm font-medium`}
+                  className={`text-sm font-medium ${
+                    org?.plan === "PRO"
+                      ? "text-muted-foreground"
+                      : "text-primary-foreground/70"
+                  }`}
                 >
                   For serious entrepreneurs.
                 </p>
@@ -156,10 +168,16 @@ const BillingPage = () => {
             </div>
 
             <div
-              className={`rounded-3xl p-6 mb-8 border transition-colors ${org?.plan === "PRO" ? "bg-emerald-50 border-emerald-100" : "bg-white/10 border-white/10"}`}
+              className={`rounded-3xl p-6 mb-8 border transition-colors ${
+                org?.plan === "PRO"
+                  ? "bg-emerald-500/10 border-emerald-500/20"
+                  : "bg-primary-foreground/10 border-primary-foreground/10"
+              }`}
             >
               <div
-                className={`flex items-center gap-3 mb-2 ${org?.plan === "PRO" ? "text-emerald-600" : "text-emerald-400"}`}
+                className={`flex items-center gap-3 mb-2 ${
+                  org?.plan === "PRO" ? "text-emerald-500" : "text-emerald-300"
+                }`}
               >
                 <TrendingUp className="w-5 h-5 font-bold" />
                 <span className="font-black text-xl tracking-tighter">
@@ -167,7 +185,11 @@ const BillingPage = () => {
                 </span>
               </div>
               <p
-                className={`text-xs leading-relaxed font-medium ${org?.plan === "PRO" ? "text-slate-600" : "text-slate-400"}`}
+                className={`text-xs leading-relaxed font-medium ${
+                  org?.plan === "PRO"
+                    ? "text-muted-foreground"
+                    : "text-primary-foreground/80"
+                }`}
               >
                 Keep 100% of your earnings. No hidden charges on your
                 hard-earned bookings.
@@ -178,13 +200,14 @@ const BillingPage = () => {
               <Button
                 onClick={handleUpgrade}
                 disabled={isProcessing}
-                className="w-full h-16 rounded-2xl text-xl font-black bg-primary text-white shadow-xl shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
+                variant="secondary"
+                className="w-full h-16 rounded-2xl text-xl font-black shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
               >
                 {isProcessing ? (
                   <Loader2 className="animate-spin" />
                 ) : (
                   "Upgrade to Pro"
-                )}{" "}
+                )}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             ) : (
@@ -197,7 +220,7 @@ const BillingPage = () => {
       </div>
 
       {/* Trust Footer */}
-      <div className="flex flex-col items-center gap-6 pt-6 border-t border-slate-100 text-slate-400">
+      <div className="flex flex-col items-center gap-6 pt-6 border-t border-border text-muted-foreground">
         <p className="text-[10px] font-black uppercase tracking-[0.2em]">
           Secure Checkout Powered By Razorpay
         </p>

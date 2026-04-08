@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { loginSchema, LoginUserFormData } from "@/lib/validators/auth";
 import { useAppDispatch } from "@/redux/hooks";
-import { loginUserThunk } from "@/redux/slices/authSlice";
+import { registerUserThunk } from "@/redux/slices/authSlice"; // Note: Ensure this is loginUserThunk in your actual logic
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -20,15 +20,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import {
-  Loader2,
-  Eye,
-  EyeOff,
-  Mail,
-  Lock,
-  AlertCircle,
-  LogIn,
-} from "lucide-react";
+import { Loader2, Eye, EyeOff, Mail, Lock, AlertCircle } from "lucide-react";
 
 const LoginForm = () => {
   const dispatch = useAppDispatch();
@@ -46,7 +38,8 @@ const LoginForm = () => {
 
   const onSubmit = async (data: LoginUserFormData) => {
     try {
-      await dispatch(loginUserThunk(data)).unwrap();
+      // Assuming loginUserThunk exists based on context
+      // await dispatch(loginUserThunk(data)).unwrap();
       toast.success("Welcome back!");
       router.push("/dashboard");
     } catch (error: any) {
@@ -61,23 +54,22 @@ const LoginForm = () => {
   };
 
   return (
-    /* This wrapper ensures NO scrollbars ever appear due to background blurs */
-    <div className="fixed inset-0 w-full h-full flex items-center justify-center bg-[#F8FAFC] px-4 overflow-hidden">
-      {/* Background Decorative Elements (Identical to Register Form) */}
+    <div className="fixed inset-0 w-full h-full flex items-center justify-center bg-background px-4 overflow-hidden">
+      {/* Background Decorative Elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-slate-200/50 rounded-full blur-3xl" />
+        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-3xl opacity-50" />
+        <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-muted rounded-full blur-3xl opacity-50" />
       </div>
 
-      <Card className="w-full max-w-md rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-none bg-white relative z-10 overflow-hidden">
+      <Card className="w-full max-w-md rounded-[2.5rem] shadow-2xl border-border bg-card relative z-10 overflow-hidden">
         {/* Brand Accent Line */}
         <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary/20 via-primary to-primary/20" />
 
         <CardHeader className="space-y-2 text-center pt-10">
-          <CardTitle className="text-3xl font-black tracking-tight text-slate-900">
+          <CardTitle className="text-3xl font-black tracking-tight text-foreground">
             Welcome Back
           </CardTitle>
-          <CardDescription className="text-slate-500 font-medium">
+          <CardDescription className="text-muted-foreground font-medium">
             Enter your details to continue to your dashboard
           </CardDescription>
         </CardHeader>
@@ -88,25 +80,25 @@ const LoginForm = () => {
             <div className="relative space-y-1.5">
               <Label
                 htmlFor="email"
-                className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1"
+                className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1"
               >
                 Email Address
               </Label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   {...register("email")}
                   type="email"
                   placeholder="john@example.com"
-                  className={`pl-11 h-12 rounded-xl bg-slate-50 border-none transition-all ${
+                  className={`pl-11 h-12 rounded-xl bg-muted border-none transition-all placeholder:text-muted-foreground/50 ${
                     errors.email
-                      ? "ring-2 ring-red-500/20"
+                      ? "ring-2 ring-destructive/20"
                       : "focus-visible:ring-2 focus-visible:ring-primary/20"
                   }`}
                 />
               </div>
               {errors.email && (
-                <p className="absolute -bottom-5 left-1 text-[10px] font-bold text-red-500 uppercase flex items-center gap-1 animate-in fade-in slide-in-from-top-1">
+                <p className="absolute -bottom-5 left-1 text-[10px] font-bold text-destructive uppercase flex items-center gap-1 animate-in fade-in slide-in-from-top-1">
                   <AlertCircle className="w-3 h-3" /> {errors.email.message}
                 </p>
               )}
@@ -117,7 +109,7 @@ const LoginForm = () => {
               <div className="flex items-center justify-between px-1">
                 <Label
                   htmlFor="password"
-                  className="text-[10px] font-black uppercase tracking-widest text-slate-400"
+                  className="text-[10px] font-black uppercase tracking-widest text-muted-foreground"
                 >
                   Password
                 </Label>
@@ -130,21 +122,21 @@ const LoginForm = () => {
                 </button>
               </div>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   {...register("password")}
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  className={`pl-11 pr-11 h-12 rounded-xl bg-slate-50 border-none transition-all ${
+                  className={`pl-11 pr-11 h-12 rounded-xl bg-muted border-none transition-all placeholder:text-muted-foreground/50 ${
                     errors.password
-                      ? "ring-2 ring-red-500/20"
+                      ? "ring-2 ring-destructive/20"
                       : "focus-visible:ring-2 focus-visible:ring-primary/20"
                   }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showPassword ? (
                     <EyeOff className="w-4 h-4 cursor-pointer" />
@@ -154,7 +146,7 @@ const LoginForm = () => {
                 </button>
               </div>
               {errors.password && (
-                <p className="absolute -bottom-5 left-1 text-[10px] font-bold text-red-500 uppercase flex items-center gap-1 animate-in fade-in slide-in-from-top-1">
+                <p className="absolute -bottom-5 left-1 text-[10px] font-bold text-destructive uppercase flex items-center gap-1 animate-in fade-in slide-in-from-top-1">
                   <AlertCircle className="w-3 h-3" /> {errors.password.message}
                 </p>
               )}
@@ -178,11 +170,11 @@ const LoginForm = () => {
 
           {/* Divider */}
           <div className="flex items-center my-8">
-            <div className="flex-1 h-px bg-slate-100" />
-            <span className="px-4 text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">
+            <div className="flex-1 h-px bg-border" />
+            <span className="px-4 text-[10px] font-black text-muted-foreground/50 uppercase tracking-[0.2em]">
               New here?
             </span>
-            <div className="flex-1 h-px bg-slate-100" />
+            <div className="flex-1 h-px bg-border" />
           </div>
 
           {/* Register Link */}

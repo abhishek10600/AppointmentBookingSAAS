@@ -65,7 +65,7 @@ const IntegrationPage = () => {
   return (
     <div className="max-w-7xl space-y-10 p-6">
       <header className="space-y-2">
-        <h2 className="text-5xl font-black tracking-tighter text-slate-900">
+        <h2 className="text-5xl font-black tracking-tighter">
           Integrations
         </h2>
         <p className="text-muted-foreground text-lg">

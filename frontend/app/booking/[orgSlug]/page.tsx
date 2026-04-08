@@ -93,7 +93,6 @@ const Page = () => {
     return () => clearInterval(interval);
   }, [selectedService, date, fetchSlots]);
 
-  // Smooth scroll to form when slot is selected
   useEffect(() => {
     if (selectedSlot && formRef.current) {
       formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -102,7 +101,7 @@ const Page = () => {
 
   if (!organization) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
+      <div className="min-h-screen flex items-center justify-center bg-background p-6">
         <Skeleton className="h-[500px] w-full max-w-2xl rounded-[3rem]" />
       </div>
     );
@@ -111,26 +110,26 @@ const Page = () => {
   const step = !selectedService ? 1 : !date ? 2 : !selectedSlot ? 3 : 4;
 
   return (
-    <div className="min-h-screen bg-[#FDFDFF] pb-32">
+    <div className="min-h-screen bg-background pb-32">
       {/* Dynamic Header */}
-      <div className="w-full bg-white border-b border-slate-100 sticky top-0 z-50 px-6 py-4 backdrop-blur-md bg-white/80">
+      <div className="w-full bg-card border-b border-border sticky top-0 z-50 px-6 py-4 backdrop-blur-md bg-card/80">
         <div className="max-w-2xl mx-auto flex justify-between items-center">
           <div>
-            <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-xl font-bold text-foreground tracking-tight">
               {organization.name}
             </h1>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1">
               <ShieldCheck className="w-3 h-3 text-emerald-500" /> Verified
               Merchant
             </p>
           </div>
           <div className="text-right">
-            <p className="text-[10px] font-black text-slate-400 uppercase mb-1">
+            <p className="text-[10px] font-black text-muted-foreground uppercase mb-1">
               Step {step}/4
             </p>
-            <div className="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <div className="w-24 h-1.5 bg-muted rounded-full overflow-hidden">
               <div
-                className="h-full bg-slate-900 transition-all duration-500 ease-out"
+                className="h-full bg-foreground transition-all duration-500 ease-out"
                 style={{ width: `${(step / 4) * 100}%` }}
               />
             </div>
@@ -204,16 +203,16 @@ const Page = () => {
       {/* Floating Price Summary (Mobile) */}
       {selectedSlot && !loadingSlots && (
         <div className="fixed bottom-6 left-6 right-6 z-50 md:hidden animate-in slide-in-from-bottom-10">
-          <div className="bg-slate-900 text-white p-4 rounded-[2rem] shadow-2xl flex justify-between items-center border border-white/10 backdrop-blur-xl">
+          <div className="bg-foreground text-background p-4 rounded-[2rem] shadow-2xl flex justify-between items-center border border-border/10 backdrop-blur-xl">
             <div className="pl-2">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+              <p className="text-[10px] font-bold opacity-70 uppercase tracking-widest">
                 Final Price
               </p>
               <p className="text-xl font-black italic">
                 ₹{selectedService.price}
               </p>
             </div>
-            <div className="flex items-center gap-2 text-slate-400 text-xs font-medium pr-2">
+            <div className="flex items-center gap-2 opacity-70 text-xs font-medium pr-2">
               {selectedSlot} <ArrowRight className="w-4 h-4" />
             </div>
           </div>
@@ -223,7 +222,6 @@ const Page = () => {
   );
 };
 
-// Helper Component for Section Headers
 const SectionHeader = ({
   number,
   title,
@@ -235,12 +233,18 @@ const SectionHeader = ({
 }) => (
   <div className="flex items-center gap-4">
     <div
-      className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold transition-all duration-500 shadow-sm ${active ? "bg-emerald-500 text-white scale-90 rotate-[360deg]" : "bg-white border border-slate-100 text-slate-400"}`}
+      className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold transition-all duration-500 shadow-sm ${
+        active
+          ? "bg-emerald-500 text-white scale-90 rotate-[360deg]"
+          : "bg-card border border-border text-muted-foreground"
+      }`}
     >
       {active ? <CheckCircle2 className="w-6 h-6" /> : number}
     </div>
     <h2
-      className={`text-xl font-black tracking-tight transition-colors ${active ? "text-slate-900" : "text-slate-300"}`}
+      className={`text-xl font-black tracking-tight transition-colors ${
+        active ? "text-foreground" : "text-muted-foreground/40"
+      }`}
     >
       {title}
     </h2>

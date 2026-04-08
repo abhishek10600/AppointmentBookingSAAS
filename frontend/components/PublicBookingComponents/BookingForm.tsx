@@ -79,24 +79,24 @@ export default function BookingForm({ service, date, slot, onSuccess }: any) {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
-      <div className="bg-slate-50 p-8 rounded-[2rem] border border-slate-100 relative overflow-hidden group">
-        <Sparkles className="absolute -right-4 -top-4 w-24 h-24 text-slate-100 group-hover:text-primary/5 transition-colors" />
+      <div className="bg-muted p-8 rounded-[2rem] border border-border relative overflow-hidden group">
+        <Sparkles className="absolute -right-4 -top-4 w-24 h-24 text-foreground/5 group-hover:text-primary/10 transition-colors" />
 
         <div className="relative z-10 space-y-6">
           <div className="flex justify-between items-end">
             <div>
-              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1">
+              <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-1">
                 Total to Pay
               </p>
-              <h3 className="text-3xl font-black text-slate-900 leading-none">
+              <h3 className="text-3xl font-black text-foreground leading-none">
                 ₹{service.price}
               </h3>
             </div>
             <div className="text-right">
-              <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-1 text-right">
+              <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-1 text-right">
                 Duration
               </p>
-              <p className="font-bold text-slate-700">
+              <p className="font-bold text-foreground/80">
                 {service.durationInMinutes} Minutes
               </p>
             </div>
@@ -104,13 +104,13 @@ export default function BookingForm({ service, date, slot, onSuccess }: any) {
 
           <div className="space-y-4 pt-4">
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-slate-500 ml-1">
+              <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">
                 Your Full Name
               </Label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40" />
                 <Input
-                  className="pl-11 h-12 rounded-xl bg-white border-slate-200 focus:ring-primary/20 shadow-sm"
+                  className="pl-11 h-12 rounded-xl bg-card border-border focus:ring-primary/20 shadow-sm"
                   placeholder="e.g. John Wick"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -119,14 +119,14 @@ export default function BookingForm({ service, date, slot, onSuccess }: any) {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-slate-500 ml-1">
+              <Label className="text-[10px] font-black uppercase text-muted-foreground ml-1">
                 Email Address
               </Label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40" />
                 <Input
                   type="email"
-                  className="pl-11 h-12 rounded-xl bg-white border-slate-200 focus:ring-primary/20 shadow-sm"
+                  className="pl-11 h-12 rounded-xl bg-card border-border focus:ring-primary/20 shadow-sm"
                   placeholder="john@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -140,7 +140,7 @@ export default function BookingForm({ service, date, slot, onSuccess }: any) {
       <Button
         onClick={handleSubmit}
         disabled={loading}
-        className="w-full h-16 rounded-2xl text-lg font-black shadow-2xl shadow-primary/20 hover:scale-[1.01] active:scale-95 transition-all gap-3 bg-primary text-white cursor-pointer"
+        className="w-full h-16 rounded-2xl text-lg font-black shadow-2xl shadow-primary/20 hover:scale-[1.01] active:scale-95 transition-all gap-3 cursor-pointer"
       >
         {loading ? (
           <>
