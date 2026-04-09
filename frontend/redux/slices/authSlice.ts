@@ -31,7 +31,7 @@ export const loginUserThunk = createAsyncThunk<
     const res = await authApi.login(data);
 
     // store token
-    tokenService.setToken(res.token);
+    tokenService.setToken(res.accessToken);
 
     return res;
   } catch (error: any) {
@@ -49,7 +49,7 @@ export const registerUserThunk = createAsyncThunk<
   try {
     const res = await authApi.register(data);
 
-    tokenService.setToken(res.token);
+    tokenService.setToken(res.accessToken);
 
     return res.user;
   } catch (error: any) {

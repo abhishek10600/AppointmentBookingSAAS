@@ -150,7 +150,7 @@ export default function ServicesPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive rounded-full transition-colors"
+                    className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive rounded-full transition-colors cursor-pointer"
                     onClick={async () => {
                       if (confirm("Permanently delete this service?")) {
                         try {

@@ -56,26 +56,17 @@ export const createOrderService = async (
     },
   });
 
-  const price = service.price;
-  let platFormFee = 0;
-
-  if (service.Organization.plan === "FREE") {
-    platFormFee = Math.round(price * 0.08);
-  }
-
-  const totalAmount = price + platFormFee;
-
   const order = await razorpay.orders.create({
-    amount: totalAmount * 100,
+    amount: service.price * 100,
     currency: service.currency,
     receipt: `receipt_${Date.now()}`,
   });
 
   const orderResult = {
     order,
-    price,
-    platFormFee,
-    totalAmount,
+    price: service.price,
+    // platFormFee,
+    // totalAmount,
   };
 
   return orderResult;

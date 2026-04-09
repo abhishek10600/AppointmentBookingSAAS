@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../utils/ApiError.js";
-import { verifyToken } from "../utils/jwt.js";
+import { verifyAccessToken } from "../utils/jwt.js";
 import { IJwtUserPayload } from "../types/index.js";
 
 export const authMiddleware = (
@@ -17,10 +17,10 @@ export const authMiddleware = (
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = verifyToken(token);
+    const decoded = verifyAccessToken(token);
     req.userId = decoded.userId;
     next();
   } catch {
-    next(new ApiError(401, "Invalid token"));
+    next(new ApiError(401, "Invalid or expired access token"));
   }
 };

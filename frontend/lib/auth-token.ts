@@ -6,7 +6,7 @@ export const tokenService = {
       return accessToken;
     }
     if (typeof window !== "undefined") {
-      accessToken = localStorage.getItem("token");
+      accessToken = localStorage.getItem("accessToken");
     }
 
     return accessToken;
@@ -15,14 +15,14 @@ export const tokenService = {
   setToken: (token: string) => {
     accessToken = token;
     if (typeof window !== "undefined") {
-      localStorage.setItem("token", token);
+      localStorage.setItem("accessToken", token);
     }
   },
 
   clearToken: () => {
     accessToken = null;
     if (typeof window !== "undefined") {
-      localStorage.removeItem("token");
+      localStorage.removeItem("accessToken");
     }
   },
 };

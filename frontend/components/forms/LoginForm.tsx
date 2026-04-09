@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { loginSchema, LoginUserFormData } from "@/lib/validators/auth";
 import { useAppDispatch } from "@/redux/hooks";
-import { registerUserThunk } from "@/redux/slices/authSlice"; // Note: Ensure this is loginUserThunk in your actual logic
+import { loginUserThunk, registerUserThunk } from "@/redux/slices/authSlice"; // Note: Ensure this is loginUserThunk in your actual logic
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -38,8 +38,7 @@ const LoginForm = () => {
 
   const onSubmit = async (data: LoginUserFormData) => {
     try {
-      // Assuming loginUserThunk exists based on context
-      // await dispatch(loginUserThunk(data)).unwrap();
+      await dispatch(loginUserThunk(data)).unwrap();
       toast.success("Welcome back!");
       router.push("/dashboard");
     } catch (error: any) {

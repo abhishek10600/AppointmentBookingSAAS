@@ -296,7 +296,7 @@ export default function CreateServiceDialog() {
       <DialogTrigger asChild>
         <Button
           disabled={!currentOrgId}
-          className="rounded-2xl px-6 h-12 font-bold shadow-lg shadow-primary/10 transition-all hover:scale-105 active:scale-95 gap-2"
+          className="rounded-2xl px-6 h-12 font-bold shadow-lg shadow-primary/10 transition-all hover:scale-105 active:scale-95 gap-2 cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Create Service
         </Button>
@@ -420,7 +420,7 @@ export default function CreateServiceDialog() {
 
               <Button
                 type="submit"
-                className="w-full h-14 text-lg font-bold rounded-2xl mt-4 shadow-xl hover:shadow-primary/20 transition-all"
+                className="w-full h-14 text-lg font-bold rounded-2xl mt-4 shadow-xl hover:shadow-primary/20 transition-all cursor-pointer"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (

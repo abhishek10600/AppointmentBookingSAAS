@@ -22,6 +22,7 @@ model User{
   organizations     Organization[]
   bankDetail        BankDetail?
   wallet            Wallet?
+  refreshToken      RefreshToken[]      
 
   createdAt         DateTime              @default(now())
   updatedAt         DateTime              @updatedAt
@@ -31,6 +32,19 @@ enum UserRole{
   OWNER
   ADMIN
   STAFF
+}
+
+
+model RefreshToken{
+  id                String                @id @default(uuid())
+  userId            String
+  token             String                @unique
+  expiresAt         DateTime
+  isRevoked         Boolean               @default(false)
+
+  user              User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt         DateTime              @default(now())
 }
 
 model Organization {

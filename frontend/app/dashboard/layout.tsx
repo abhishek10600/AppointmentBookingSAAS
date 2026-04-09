@@ -1,6 +1,4 @@
 "use client";
-
-import DashboardThemeWrapper from "@/components/DashboardThemeWrapper";
 import Navbar from "@/components/general/Navbar";
 import Sidebar from "@/components/general/Sidebar";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -17,13 +15,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }, [dispatch]);
 
   return (
-    <ProtectedRoute>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        enableSystem
-        disableTransitionOnChange
-      >
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <ProtectedRoute>
         <div className="flex flex-col h-screen bg-background overflow-hidden">
           {/* Navbar */}
           <Navbar />
@@ -48,8 +46,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             </main>
           </div>
         </div>
-      </ThemeProvider>
-    </ProtectedRoute>
+      </ProtectedRoute>
+    </ThemeProvider>
   );
 };
 
