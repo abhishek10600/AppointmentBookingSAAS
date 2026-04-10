@@ -74,3 +74,22 @@ export const bookingCancelledTemplate = (
   </div>
   `;
 };
+
+export const resetPasswordEmailTemplate = (
+  customerName: string,
+  resetLink: string
+): string => {
+  return `
+   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+    <h2>Reset Your Password</h2>
+    <p>Hi ${customerName},</p>
+    <p>We received a request to reset your password. Click the button below to create a new password. This link is valid for <strong>10 minutes</strong>.</p>
+    <a href="${resetLink}" 
+       style="display: inline-block; padding: 12px 24px; background-color: #4F46E5; color: white; text-decoration: none; border-radius: 6px; margin: 16px 0;">
+      Reset Password
+    </a>
+    <p>If you didn't request this, you can safely ignore this email.</p>
+    <p style="color: #6B7280; font-size: 14px;">This link expires in 10 minutes.</p>
+  </div>
+  `;
+};

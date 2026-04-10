@@ -1,5 +1,9 @@
 import { api } from "../axios";
-import { LoginUserFormData, RegisterUserFormData } from "../validators/auth";
+import {
+  LoginUserFormData,
+  RegisterUserFormData,
+  ResetPasswordFormData,
+} from "../validators/auth";
 
 export interface AuthResponse {
   user: {
@@ -24,6 +28,11 @@ export const authApi = {
 
   getMe: async () => {
     const res = await api.get("/auth/me");
+    return res.data.data;
+  },
+
+  changePassword: async (data: ResetPasswordFormData) => {
+    const res = await api.post("/auth/change-password", data);
     return res.data.data;
   },
 };

@@ -17,6 +17,7 @@ import {
   Settings,
   CircleHelp,
 } from "lucide-react";
+import Link from "next/link";
 
 const menuItems = [
   { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -122,10 +123,13 @@ const Sidebar = () => {
             {!collapsed && <span className="tracking-tight">Support</span>}
           </button>
 
-          <button className="flex w-full items-center gap-4 rounded-xl px-4 py-3 text-sm font-bold text-muted-foreground hover:bg-muted hover:text-foreground transition-all group">
-            <Settings className="h-5 w-5 text-muted-foreground group-hover:text-foreground" />
+          <Link
+            href="/dashboard/settings"
+            className="flex w-full items-center gap-4 rounded-xl px-4 py-3 text-sm font-bold text-muted-foreground hover:bg-muted hover:text-foreground transition-all group"
+          >
+            <Settings className="h-5 w-5 text-muted-foreground group-hover:text-foreground cursor-pointer" />
             {!collapsed && <span className="tracking-tight">Settings</span>}
-          </button>
+          </Link>
         </div>
       </div>
     </aside>

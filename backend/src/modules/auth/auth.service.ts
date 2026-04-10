@@ -1,4 +1,5 @@
 import { prisma } from "../../lib/prisma.js";
+import { emailQueue } from "../../queues/email.queue.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { comparePassword, hashPassword } from "../../utils/hash.js";
 import {
@@ -6,8 +7,15 @@ import {
   generateRefreshToken,
   verifyRefershToken,
 } from "../../utils/jwt.js";
+import { changePasswordData } from "./auth.schema.js";
+import crypto from "crypto";
+import dotenv from "dotenv";
+dotenv.config({
+  path: "./.env",
+});
 
 const REFRESH_TOKEN_EXPIRY_DAYS = 7;
+const RESET_TOKEN_EXPIRY_MINUTES = 10;
 
 const createRefreshToken = async (userId: string) => {
   const token = generateRefreshToken(userId);
@@ -159,5 +167,159 @@ export const getUserById = async (userId: string) => {
 
   return {
     user,
+  };
+};
+
+export const changePasswordService = async (
+  userId: string,
+  body: changePasswordData
+) => {
+  const { oldPassword, newPassword } = body;
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!existingUser) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const isOldPasswordCorrect = await comparePassword(
+    oldPassword,
+    existingUser.passwordHash
+  );
+
+  if (!isOldPasswordCorrect) {
+    throw new ApiError(400, "Old password incorrect");
+  }
+
+  const newPasswordHash = await hashPassword(newPassword);
+
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      passwordHash: newPasswordHash,
+    },
+  });
+
+  return {
+    success: true,
+    message: "Password updated succesfully",
+  };
+};
+
+export const forgotPasswordService = async (email: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (!user) {
+    return {
+      success: true,
+      message: "If that email exists, we have sent the reset link in the email",
+    };
+  }
+
+  await prisma.passwordResetToken.updateMany({
+    where: {
+      userId: user.id,
+      isUsed: false,
+    },
+    data: {
+      isUsed: true,
+    },
+  });
+
+  const rawToken = crypto.randomBytes(32).toString("hex");
+
+  const expiresAt = new Date();
+  expiresAt.setMinutes(expiresAt.getMinutes() + RESET_TOKEN_EXPIRY_MINUTES!);
+
+  await prisma.passwordResetToken.create({
+    data: {
+      userId: user.id,
+      token: rawToken,
+      expiresAt,
+    },
+  });
+
+  const resetLink = `${process.env.CORS_ORIGINS}/reset-password?token=${rawToken}`;
+
+  await emailQueue.add("forgot-password", {
+    email: user.email,
+    name: user.name,
+    resetLink,
+  });
+
+  return {
+    success: true,
+    message: "If that email exists, we have sent a reset link in that email",
+  };
+};
+
+export const resetPasswordWithTokenService = async (
+  token: string,
+  newPassword: string
+) => {
+  const resetToken = await prisma.passwordResetToken.findUnique({
+    where: {
+      token,
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  if (!resetToken) {
+    throw new ApiError(400, "Invalid or expired reset token");
+  }
+
+  if (resetToken.isUsed) {
+    throw new ApiError(400, "Reset yoken already used");
+  }
+
+  if (resetToken.expiresAt < new Date()) {
+    throw new ApiError(400, "Reset token has expired.");
+  }
+
+  const newPasswordHash = await hashPassword(newPassword);
+
+  await prisma.$transaction([
+    prisma.user.update({
+      where: {
+        id: resetToken.userId,
+      },
+      data: {
+        passwordHash: newPasswordHash,
+      },
+    }),
+    prisma.passwordResetToken.update({
+      where: {
+        id: resetToken.id,
+        isUsed: false,
+      },
+      data: {
+        isUsed: true,
+      },
+    }),
+    prisma.refreshToken.updateMany({
+      where: {
+        userId: resetToken.userId,
+        isRevoked: false,
+      },
+      data: {
+        isRevoked: true,
+      },
+    }),
+  ]);
+
+  return {
+    success: true,
+    message: "Password has been reset successfully",
   };
 };

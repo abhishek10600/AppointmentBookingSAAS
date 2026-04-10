@@ -1,12 +1,21 @@
 import { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync.js";
-import { loginUserSchema, registerUserSchema } from "./auth.schema.js";
+import {
+  loginUserSchema,
+  registerUserSchema,
+  changePasswordSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+} from "./auth.schema.js";
 import {
   getUserById,
   loginUser,
   logoutUser,
   refreshAccessToken,
   registerUser,
+  changePasswordService,
+  forgotPasswordService,
+  resetPasswordWithTokenService,
 } from "./auth.service.js";
 import { ApiError } from "../../utils/ApiError.js";
 
@@ -61,3 +70,39 @@ export const getMe = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+export const changePasswordController = catchAsync(
+  async (req: Request, res: Response) => {
+    const userId = req.userId as string;
+    const parsedBody = changePasswordSchema.parse(req.body);
+    const result = await changePasswordService(userId, parsedBody);
+    return res.status(200).json({
+      data: result,
+    });
+  }
+);
+
+export const forgotPasswordController = catchAsync(
+  async (req: Request, res: Response) => {
+    const parsedBody = forgotPasswordSchema.parse(req.body);
+    const result = await forgotPasswordService(parsedBody.email);
+    return res.status(200).json({
+      data: result,
+    });
+  }
+);
+
+export const resetPasswordWithTokenController = catchAsync(
+  async (req: Request, res: Response) => {
+    const parsedBody = resetPasswordSchema.parse(req.body);
+    const result = await resetPasswordWithTokenService(
+      parsedBody.token,
+      parsedBody.newPassword
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+  }
+);
