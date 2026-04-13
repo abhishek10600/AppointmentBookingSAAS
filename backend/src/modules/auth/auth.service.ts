@@ -145,7 +145,7 @@ export const refreshAccessToken = async (incomingToken: string) => {
 export const logoutUser = async (incomingToken: string) => {
   await prisma.refreshToken
     .updateMany({
-      where: { token: incomingToken, revoked: false },
+      where: { token: incomingToken, isRevoked: false },
       data: { revoked: true },
     })
     .catch(() => {});
@@ -248,7 +248,7 @@ export const forgotPasswordService = async (email: string) => {
     },
   });
 
-  const resetLink = `${process.env.CORS_ORIGINS}/reset-password?token=${rawToken}`;
+  const resetLink = `${process.env.CORS_ORIGINS}/auth/reset-password?token=${rawToken}`;
 
   await emailQueue.add("forgot-password", {
     email: user.email,

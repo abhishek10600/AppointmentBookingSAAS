@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Loader2, Eye, EyeOff, Mail, Lock, AlertCircle } from "lucide-react";
+import Link from "next/link";
 
 const LoginForm = () => {
   const dispatch = useAppDispatch();
@@ -112,13 +113,14 @@ const LoginForm = () => {
                 >
                   Password
                 </Label>
-                <button
+                <Link
                   type="button"
+                  href="/auth/forgot-password"
                   onClick={() => router.push("/auth/forgot-password")}
-                  className="text-[10px] font-black uppercase tracking-widest text-primary hover:opacity-70 transition-opacity"
+                  className="text-[10px] font-black uppercase tracking-widest text-primary hover:opacity-70 transition-opacity cursor-pointer"
                 >
                   Forgot?
-                </button>
+                </Link>
               </div>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
