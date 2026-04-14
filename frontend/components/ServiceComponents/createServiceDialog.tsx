@@ -350,6 +350,7 @@ export default function CreateServiceDialog() {
 
                   <Input
                     type="number"
+                    min={0}
                     className="h-12 rounded-xl"
                     {...register("durationInMinutes", {
                       valueAsNumber: true,
@@ -364,6 +365,7 @@ export default function CreateServiceDialog() {
 
                   <Input
                     type="number"
+                    min={0}
                     className="h-12 rounded-xl"
                     {...register("price", { valueAsNumber: true })}
                   />

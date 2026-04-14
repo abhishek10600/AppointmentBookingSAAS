@@ -6,6 +6,7 @@ import {
 } from "../email/email.service.js";
 import { queueCreateMeeting } from "../meeting/meeting.service.js";
 import { createBookingData } from "./booking.schema.js";
+import { cache } from "../../utils/cache.js";
 
 export const createBooking = async (data: createBookingData, tx: any) => {
   const db = tx || prisma;
@@ -64,6 +65,8 @@ export const createBooking = async (data: createBookingData, tx: any) => {
     await queueBookingConfirmationEmail(booking.id);
   }
 
+  cache.del(`booking:organizationId:${booking.organizationId}`);
+
   return booking;
 };
 
@@ -86,6 +89,9 @@ export const cancelBooking = async (bookingId: string) => {
     where: {
       id: bookingId,
     },
+    include: {
+      organization: true,
+    },
   });
 
   if (!booking) {
@@ -103,10 +109,20 @@ export const cancelBooking = async (bookingId: string) => {
 
   await queueBookingCancelEmail(bookingId);
 
+  await cache.del(`booking:organizationId:${booking.organizationId}`);
+
   return cancelledBooking;
 };
 
 export const getOrganizationBookings = async (organizationId: string) => {
+  const cacheKey = `booking:organizationId:${organizationId}`;
+
+  const cached = await cache.get(cacheKey);
+  if (cached) {
+    console.log("Cache HIT");
+    return cached;
+  }
+
   const bookings = await prisma.booking.findMany({
     where: {
       organizationId,
@@ -118,6 +134,8 @@ export const getOrganizationBookings = async (organizationId: string) => {
       startTime: "desc",
     },
   });
+
+  await cache.set(cacheKey, bookings, 300);
 
   return bookings;
 };

@@ -263,7 +263,7 @@ export default function EditServiceDialog({ service }: { service: IService }) {
         <Button
           variant="outline"
           size="sm"
-          className="rounded-xl px-4 gap-2 hover:bg-primary hover:text-primary-foreground transition-all duration-200"
+          className="rounded-xl px-4 gap-2 hover:bg-primary hover:text-primary-foreground transition-all duration-200 cursor-pointer"
         >
           <Edit3 className="w-3.5 h-3.5" /> Edit
         </Button>
@@ -319,6 +319,7 @@ export default function EditServiceDialog({ service }: { service: IService }) {
 
                   <Input
                     type="number"
+                    min={0}
                     className="h-12 rounded-xl"
                     {...register("durationInMinutes", {
                       valueAsNumber: true,
@@ -333,6 +334,7 @@ export default function EditServiceDialog({ service }: { service: IService }) {
 
                   <Input
                     type="number"
+                    min={0}
                     className="h-12 rounded-xl font-medium"
                     {...register("price", { valueAsNumber: true })}
                   />

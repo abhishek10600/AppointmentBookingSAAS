@@ -234,11 +234,11 @@ const BookingsPage = () => {
                             <AlertDialogFooter className="flex-col sm:flex-col gap-3">
                               <AlertDialogAction
                                 onClick={() => handleCancel(booking.id)}
-                                className="h-14 w-full bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-2xl font-black text-xl shadow-xl shadow-destructive/20"
+                                className="h-14 w-full bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-2xl font-black text-xl shadow-xl shadow-destructive/20 cursor-pointer"
                               >
                                 Cancel Appointment
                               </AlertDialogAction>
-                              <AlertDialogCancel className="h-12 w-full border-none font-bold text-muted-foreground hover:text-foreground hover:bg-transparent">
+                              <AlertDialogCancel className="h-12 w-full border-none font-bold text-muted-foreground hover:text-foreground hover:bg-transparent cursor-pointer">
                                 Keep appointment
                               </AlertDialogCancel>
                             </AlertDialogFooter>

@@ -1,6 +1,7 @@
 import { prisma } from "../../lib/prisma.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { createAvailabilityData } from "./availability.schema.js";
+import { cache } from "../../utils/cache.js";
 
 export const createAvailablityRule = async (
   data: createAvailabilityData,
@@ -26,6 +27,8 @@ export const createAvailablityRule = async (
     },
   });
 
+  await cache.del(`availability:organizationId:${organization.id}`);
+
   return rule;
 };
 
@@ -33,6 +36,16 @@ export const getAvailabilityRules = async (
   organizationId: string,
   userId: string
 ) => {
+  const cacheKey = `availability:organizationId:${organizationId}`;
+
+  const cached = await cache.get(cacheKey);
+  if (cached) {
+    console.log("Cache HIT");
+    return cached;
+  }
+
+  console.log("Cache MISS");
+
   const organization = await prisma.organization.findFirst({
     where: {
       id: organizationId,
@@ -52,6 +65,8 @@ export const getAvailabilityRules = async (
       dayofWeek: "asc",
     },
   });
+
+  await cache.set(cacheKey, rules, 300);
 
   return rules;
 };
@@ -78,6 +93,8 @@ export const deleteAvailabilityRule = async (
       id: ruleId,
     },
   });
+
+  await cache.del(`availability:organizationId:${rule.organizationId}`);
 
   return {
     message: "Availability rule deleted",

@@ -1,6 +1,7 @@
 import { prisma } from "../../lib/prisma.js";
 import { ApiError } from "../../utils/ApiError.js";
 import { createServiceData, updateServiceData } from "./service.schema.js";
+import { cache } from "../../utils/cache.js";
 
 export const createService = async (
   data: createServiceData,
@@ -37,6 +38,8 @@ export const createService = async (
     },
   });
 
+  await cache.del(`service:organizationId:${organization.id}`);
+
   return service;
 };
 
@@ -44,6 +47,16 @@ export const getOrganizationServices = async (
   organizationId: string,
   userId: string
 ) => {
+  const cacheKey = `service:organizationId:${organizationId}`;
+
+  const cached = await cache.get(cacheKey);
+  if (cached) {
+    console.log("Cache HIT");
+    return cached;
+  }
+
+  console.log("Cache MISS");
+
   const organization = await prisma.organization.findFirst({
     where: {
       id: organizationId,
@@ -63,6 +76,8 @@ export const getOrganizationServices = async (
       createdAt: "desc",
     },
   });
+
+  await cache.set(cacheKey, services, 300);
 
   return services;
 };
@@ -134,6 +149,8 @@ export const updateService = async (
     data,
   });
 
+  await cache.del(`service:organizationId:${service.organizationId}`);
+
   return updatedService;
 };
 
@@ -156,6 +173,8 @@ export const deleteService = async (serviceId: string, userId: string) => {
       id: serviceId,
     },
   });
+
+  await cache.del(`service:organizationId:${service.organizationId}`);
 
   return { message: "Service deleted successfully." };
 };
